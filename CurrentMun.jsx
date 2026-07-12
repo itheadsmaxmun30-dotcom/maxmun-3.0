@@ -961,15 +961,18 @@ body.cm-cinematic-scroll #current-register.cm-in-view .cm-inner{
 }
 @keyframes cmCommitteeHalo{to{transform:rotate(360deg)}}
 #current-committees .cm-card-grid.enhanced{
-  perspective:1300px;gap:1rem;align-items:stretch;
+  perspective:1300px;gap:1.15rem;align-items:stretch;margin-top:1.6rem;
 }
+/* flat, aligned grid: the static rotateY tilts + 18px stagger + the active
+   card's translateZ pop made corners jut into the spotlight panel above —
+   the cursor-tilt engine now supplies the 3D feel interactively instead */
 #current-committees .cm-card-grid.enhanced .cm-card{
-  border-radius:16px;min-height:250px;transform:rotateY(-7deg) translateZ(0);
+  border-radius:16px;min-height:250px;transform:none;
   background:linear-gradient(160deg,rgba(255,255,255,.08),rgba(7,24,47,.40),rgba(255,255,255,.02));
 }
-#current-committees .cm-card-grid.enhanced .cm-card:nth-child(even){transform:rotateY(7deg) translateY(18px)}
+#current-committees .cm-card-grid.enhanced .cm-card:nth-child(even){transform:none}
 #current-committees .cm-card-grid.enhanced .cm-card.active{
-  transform:translateY(-10px) translateZ(50px) rotateY(0)!important;
+  transform:translateY(-6px) scale(1.012);
 }
 
 #current-perks .cm-experience-hero{
@@ -1397,7 +1400,7 @@ body.cm-cinematic-scroll .cm-card,body.cm-cinematic-scroll .cm-timeline-card,bod
   box-shadow:0 34px 96px rgba(120,193,255,.16),0 0 0 1px rgba(200,169,110,.22) inset!important;
 }
 #current-committees .cm-card-grid.enhanced .cm-card.active{
-  transform:translate3d(0,-12px,0) translateZ(52px) rotateY(0)!important;
+  transform:translate3d(0,-6px,0) scale(1.012);
 }
 .cm-preview-tab.active{
   box-shadow:0 14px 34px rgba(200,169,110,.20),0 0 28px rgba(120,193,255,.12)!important;

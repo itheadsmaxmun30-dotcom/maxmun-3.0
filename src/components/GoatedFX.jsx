@@ -109,6 +109,10 @@ const REVEAL_TARGETS = [
 
 const MAGNET_TARGETS = ".btn-primary,.btn-ghost,.nav-cta,.cm-btn,.portal-btn,.lock-enter-btn";
 
+/* cursor-reactive 3D tilt for cards that lack the home page's own tilt
+   (.cc and .edition-card handle themselves — excluded on purpose) */
+const TILT_TARGETS = ".cm-card,.cm-perk,.cm-stat,.cm-award-card,.cm-step-card,.cm-special,.cm-timeline-card,.cm-live-card,.podium-side,.podium-main,.gcard,.profile-card";
+
 const SPARK_COLORS = [
   "radial-gradient(circle,#f5d49a,#c8953a)",
   "radial-gradient(circle,#c4e4ff,#3d8bff)",
@@ -262,6 +266,26 @@ export default function GoatedFX() {
           el.style.transform = "";
           setTimeout(() => el.classList.remove("gfx-mag-release"), 600);
         };
+        el.addEventListener("mousemove", move);
+        el.addEventListener("mouseleave", leave);
+        cleanups.push(() => { el.removeEventListener("mousemove", move); el.removeEventListener("mouseleave", leave); });
+      }, true);
+    }
+
+    /* -- cursor-reactive card tilt -- */
+    if (fine) {
+      on(document, "mouseover", (e) => {
+        const el = e.target instanceof Element ? e.target.closest(TILT_TARGETS) : null;
+        if (!el || el.dataset.gfxTiltOn) return;
+        el.dataset.gfxTiltOn = "1";
+        const move = (ev) => {
+          const r = el.getBoundingClientRect();
+          const px = (ev.clientX - r.left) / Math.max(1, r.width) - 0.5;
+          const py = (ev.clientY - r.top) / Math.max(1, r.height) - 0.5;
+          el.style.transform = `perspective(950px) rotateX(${(-py * 7).toFixed(2)}deg) rotateY(${(px * 9).toFixed(2)}deg) translateY(-4px)`;
+          el.style.zIndex = "6";
+        };
+        const leave = () => { el.style.transform = ""; el.style.zIndex = ""; };
         el.addEventListener("mousemove", move);
         el.addEventListener("mouseleave", leave);
         cleanups.push(() => { el.removeEventListener("mousemove", move); el.removeEventListener("mouseleave", leave); });

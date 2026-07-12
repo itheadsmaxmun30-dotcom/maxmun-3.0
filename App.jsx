@@ -2192,7 +2192,7 @@ section{content-visibility:visible!important;contain-intrinsic-size:auto!importa
 /* tags keep floating but never sit over content: a large center
    exclusion mask pins them to the page edges (important beats the
    global mask reset at the top of this sheet) */
-.hero .floating-seo-tags{position:absolute;inset:0;z-index:0!important;pointer-events:none;opacity:.55!important;mask-image:radial-gradient(ellipse 58% 60% at 50% 47%,transparent 0 57%,black 76%)!important;-webkit-mask-image:radial-gradient(ellipse 58% 60% at 50% 47%,transparent 0 57%,black 76%)!important}
+.hero .floating-seo-tags{position:absolute;inset:0;z-index:0!important;pointer-events:none;opacity:.5!important;mask-image:linear-gradient(90deg,black 0 24%,transparent 31% 69%,black 76% 100%)!important;-webkit-mask-image:linear-gradient(90deg,black 0 24%,transparent 31% 69%,black 76% 100%)!important}
 .lock-access .floating-seo-tags{opacity:.85!important;mask-image:radial-gradient(ellipse 54% 62% at 50% 54%,transparent 0 54%,black 72%)!important;-webkit-mask-image:radial-gradient(ellipse 54% 62% at 50% 54%,transparent 0 54%,black 72%)!important}
 @media(max-width:760px){.hero-crest{width:74vw;opacity:.09}.hero .floating-seo-tags{opacity:.3!important}}
 `;
