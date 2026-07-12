@@ -12,8 +12,8 @@ export default function LockAccess({ onPrevious, onCurrent }) {
     try { window.dispatchEvent(new CustomEvent("gfx-warp")); } catch { /* effects are optional */ }
     setTimeout(() => {
       try { window.dispatchEvent(new CustomEvent("gfx-warp")); } catch { /* ignore */ }
-    }, 760);
-    setTimeout(() => onPrevious?.(), 1280);
+    }, 1150);
+    setTimeout(() => onPrevious?.(), 1900);
   };
 
   return (

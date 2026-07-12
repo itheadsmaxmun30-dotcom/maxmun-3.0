@@ -2144,51 +2144,60 @@ section{content-visibility:visible!important;contain-intrinsic-size:auto!importa
 .lock-warp-chroma.chroma-b{background:radial-gradient(circle at 50% 50%,rgba(232,184,109,.45),transparent 62%)}
 .lock-warp-flash{position:fixed;inset:0;opacity:0;pointer-events:none;z-index:8;background:radial-gradient(circle at 50% 50%,rgba(255,250,236,.98),rgba(140,200,255,.55) 42%,rgba(0,80,255,.18) 62%,transparent 78%)}
 
-.lock-access.entering{pointer-events:none;animation:lockGateOut 1.3s ease forwards}
-@keyframes lockGateOut{0%,62%{opacity:1}100%{opacity:0}}
+/* gate exit is opacity-only ON PURPOSE: animating transform on this
+   element (perspective + isolation + backdrop-filter subtree) makes
+   Chrome's compositor stop painting the whole gate — verified with
+   frame captures. The zoom feel comes from the card, rings, and
+   star layers instead, which paint reliably. */
+.lock-access.entering{pointer-events:none;animation:lockGateOut 1.95s ease forwards}
+@keyframes lockGateOut{0%,68%{opacity:1}100%{opacity:0}}
 /* the card carries an !important transform, which outranks keyframes —
    so the fly-through is a transition between two !important states */
 .lock-access.entering .lock-access-card{
   transform:translate3d(0,var(--lock-card-y),0) translateZ(1500px) rotateX(16deg) scale(1.6)!important;
   opacity:0;filter:blur(22px);
-  transition:transform 1.05s cubic-bezier(.7,.01,.85,.4),opacity .9s ease .15s,filter 1s ease;
+  transition:transform 1.2s cubic-bezier(.7,.01,.85,.4),opacity 1.05s ease .15s,filter 1.15s ease;
 }
-.lock-access.entering .lock-warp{animation:lockShake .5s linear .55s}
-@keyframes lockShake{0%,100%{transform:translate(0,0)}20%{transform:translate(-7px,5px)}40%{transform:translate(6px,-6px)}60%{transform:translate(-5px,-4px)}80%{transform:translate(5px,6px)}}
-.lock-access.entering .lock-warp i{animation:lockTunnel 1.05s cubic-bezier(.5,0,.82,.4) forwards}
+.lock-access.entering .lock-warp{animation:lockShake .55s linear .8s}
+@keyframes lockShake{0%,100%{transform:translate(0,0)}20%{transform:translate(-8px,6px)}40%{transform:translate(7px,-7px)}60%{transform:translate(-6px,-5px)}80%{transform:translate(6px,7px)}}
+.lock-access.entering .lock-warp i{animation:lockTunnel 1.3s cubic-bezier(.5,0,.82,.4) forwards}
 .lock-access.entering .lock-warp i:nth-of-type(1){animation-delay:0s}
-.lock-access.entering .lock-warp i:nth-of-type(2){animation-delay:.09s}
-.lock-access.entering .lock-warp i:nth-of-type(3){animation-delay:.18s}
-.lock-access.entering .lock-warp i:nth-of-type(4){animation-delay:.27s}
-.lock-access.entering .lock-warp i:nth-of-type(5){animation-delay:.36s}
-.lock-access.entering .lock-warp i:nth-of-type(6){animation-delay:.45s}
-.lock-access.entering .lock-warp i:nth-of-type(7){animation-delay:.54s}
-.lock-access.entering .lock-warp i:nth-of-type(8){animation-delay:.63s}
-@keyframes lockTunnel{0%{transform:scale(.06) translateZ(-420px);opacity:0}18%{opacity:1}100%{transform:scale(11) translateZ(320px);opacity:0}}
-.lock-access.entering .lock-warp-stars{animation:lockStarRush 1.15s cubic-bezier(.55,0,.85,.35) forwards}
-.lock-access.entering .lock-warp-stars.s2{animation-delay:.14s}
-.lock-access.entering .lock-warp-stars.s3{animation-delay:.28s}
-@keyframes lockStarRush{0%{transform:scale(.18) rotate(0deg);opacity:0}22%{opacity:1}100%{transform:scale(3.4) rotate(14deg);opacity:0}}
-.lock-access.entering .lock-warp-burst{animation:lockBurst 1.15s cubic-bezier(.58,0,.88,.45) .05s forwards}
-@keyframes lockBurst{0%{transform:scale(.03) rotate(0deg);opacity:0}26%{opacity:1}100%{transform:scale(1.45) rotate(70deg);opacity:0}}
-.lock-access.entering .lock-warp-chroma.chroma-a{animation:lockChromaA .55s ease-out .5s forwards}
-.lock-access.entering .lock-warp-chroma.chroma-b{animation:lockChromaB .55s ease-out .52s forwards}
-@keyframes lockChromaA{0%{opacity:0;transform:translate(0,0) scale(.85)}35%{opacity:.85;transform:translate(-14px,-6px) scale(1.05)}100%{opacity:0;transform:translate(-30px,-12px) scale(1.2)}}
-@keyframes lockChromaB{0%{opacity:0;transform:translate(0,0) scale(.85)}35%{opacity:.8;transform:translate(14px,8px) scale(1.05)}100%{opacity:0;transform:translate(30px,14px) scale(1.2)}}
-.lock-access.entering .lock-warp-flash{animation:lockFlash .6s ease-out .62s forwards}
-@keyframes lockFlash{0%{opacity:0}34%{opacity:1}100%{opacity:0}}
-.lock-access.entering .lock-access-mesh,.lock-access.entering .lock-access-rings{animation:lockBgRush 1s ease-in forwards}
-@keyframes lockBgRush{to{transform:scale(1.9);opacity:0;filter:blur(14px)}}
+.lock-access.entering .lock-warp i:nth-of-type(2){animation-delay:.11s}
+.lock-access.entering .lock-warp i:nth-of-type(3){animation-delay:.22s}
+.lock-access.entering .lock-warp i:nth-of-type(4){animation-delay:.33s}
+.lock-access.entering .lock-warp i:nth-of-type(5){animation-delay:.44s}
+.lock-access.entering .lock-warp i:nth-of-type(6){animation-delay:.55s}
+.lock-access.entering .lock-warp i:nth-of-type(7){animation-delay:.66s}
+.lock-access.entering .lock-warp i:nth-of-type(8){animation-delay:.77s}
+@keyframes lockTunnel{0%{transform:scale(.06) translateZ(-420px);opacity:0}16%{opacity:1}100%{transform:scale(12) translateZ(340px);opacity:0}}
+.lock-access.entering .lock-warp-stars{animation:lockStarRush 1.5s cubic-bezier(.55,0,.85,.35) forwards}
+.lock-access.entering .lock-warp-stars.s2{animation-delay:.18s}
+.lock-access.entering .lock-warp-stars.s3{animation-delay:.36s}
+@keyframes lockStarRush{0%{transform:scale(.18) rotate(0deg);opacity:0}20%{opacity:1}100%{transform:scale(3.8) rotate(16deg);opacity:0}}
+.lock-access.entering .lock-warp-burst{animation:lockBurst 1.5s cubic-bezier(.58,0,.88,.45) .05s forwards}
+@keyframes lockBurst{0%{transform:scale(.03) rotate(0deg);opacity:0}22%{opacity:1}100%{transform:scale(1.55) rotate(80deg);opacity:0}}
+.lock-access.entering .lock-warp-chroma.chroma-a{animation:lockChromaA .7s ease-out .75s forwards}
+.lock-access.entering .lock-warp-chroma.chroma-b{animation:lockChromaB .7s ease-out .78s forwards}
+@keyframes lockChromaA{0%{opacity:0;transform:translate(0,0) scale(.85)}35%{opacity:.9;transform:translate(-16px,-7px) scale(1.06)}100%{opacity:0;transform:translate(-34px,-14px) scale(1.22)}}
+@keyframes lockChromaB{0%{opacity:0;transform:translate(0,0) scale(.85)}35%{opacity:.85;transform:translate(16px,9px) scale(1.06)}100%{opacity:0;transform:translate(34px,16px) scale(1.22)}}
+.lock-access.entering .lock-warp-flash{animation:lockFlash .75s ease-out .95s forwards}
+@keyframes lockFlash{0%{opacity:0}32%{opacity:1}100%{opacity:0}}
+.lock-access.entering .lock-access-mesh,.lock-access.entering .lock-access-rings{animation:lockBgRush 1.3s ease-in forwards}
+@keyframes lockBgRush{to{transform:scale(2);opacity:0;filter:blur(14px)}}
 .lock-access.entering .lock-holo-object,.lock-access.entering .floating-seo-tag{animation:lockScatter .7s cubic-bezier(.55,0,.85,.4) forwards!important}
 @keyframes lockScatter{to{transform:scale(2.8) translateY(-44px);opacity:0;filter:blur(10px)}}
 .lock-access.entering .lock-enter-btn{transform:scale(.9);opacity:.3;transition:transform .45s ease,opacity .45s ease}
-@media(prefers-reduced-motion:reduce){.lock-warp,.lock-warp-flash,.lock-warp-chroma{display:none}.lock-access.entering{animation:lockGateOut .6s ease forwards}.lock-access.entering .lock-access-card{transition:opacity .4s ease;transform:translate3d(0,var(--lock-card-y),0)!important;filter:none}.lock-access.entering .lock-holo-object,.lock-access.entering .floating-seo-tag{animation:none!important}}
+@keyframes lockGateFade{to{opacity:0}}
+@media(prefers-reduced-motion:reduce){.lock-warp,.lock-warp-flash,.lock-warp-chroma{display:none}.lock-access.entering{animation:lockGateFade .6s ease forwards}.lock-access.entering .lock-access-card{transition:opacity .4s ease;transform:translate3d(0,var(--lock-card-y),0)!important;filter:none}.lock-access.entering .lock-holo-object,.lock-access.entering .floating-seo-tag{animation:none!important}}
 @media(max-width:640px){.lock-enter-btn{width:min(170px,58vw)}}
 
 /* ── hero: holographic crest + drifting keyword tags ── */
-.hero-crest{position:absolute;left:50%;top:47%;width:clamp(280px,42vw,540px);transform:translate(-50%,-50%);opacity:.13;pointer-events:none;z-index:1;filter:drop-shadow(0 0 70px rgba(61,139,255,.5));animation:heroCrestFloat 9s ease-in-out infinite}
+/* crisp holo-crest: full opacity image, sharpness preserved (the old
+   ultra-low opacity + 70px glow read as "blurry"); a radial fade mask
+   keeps it from fighting the title */
+.hero-crest{position:absolute;left:50%;top:46%;width:clamp(230px,26vw,420px);transform:translate(-50%,-50%);opacity:.3;pointer-events:none;z-index:1;filter:saturate(1.15) contrast(1.06) drop-shadow(0 0 26px rgba(61,139,255,.35));animation:heroCrestFloat 9s ease-in-out infinite;mask-image:radial-gradient(circle at 50% 50%,black 0 58%,transparent 88%);-webkit-mask-image:radial-gradient(circle at 50% 50%,black 0 58%,transparent 88%)}
 .hero-crest img{width:100%;height:auto;display:block}
-@keyframes heroCrestFloat{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.11}50%{transform:translate(-50%,-52.5%) scale(1.04);opacity:.17}}
+@keyframes heroCrestFloat{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.26}50%{transform:translate(-50%,-52%) scale(1.03);opacity:.34}}
 /* tags keep floating but never sit over content: a large center
    exclusion mask pins them to the page edges (important beats the
    global mask reset at the top of this sheet) */
@@ -3028,7 +3037,7 @@ function MaxMUNHome({ onNavigateToRegister, onNavigateToAdmin, onNavigateToCurre
           <div className="hero-edition">Edition 3.0 · Two Conferences · 2026</div>
           <p className="hero-sub">Delhi's most prestigious student-led Model United Nations.<br />Junior Conference: <strong style={{color:"var(--gold2)"}}>17 July</strong> &nbsp;·&nbsp; Senior Conference: <strong style={{color:"var(--gold2)"}}>31 July</strong></p>
           <div className="hero-actions"><button className="btn-primary" style={{ padding:"1.05rem 1.85rem", fontSize:".82rem" }} onClick={() => onNavigateToCurrentMun?.()}>Explore Current MAXMUN 3.0</button><button className="btn-ghost" style={{ padding:"1.05rem 1.85rem", fontSize:".82rem" }} onClick={() => onNavigateToRegister?.()}>Register Now</button></div>
-          <div className="hero-metrics">{[["150+","Delegates"],["7","Committees"],["3","Editions"],["2","Conferences"]].map(([n,l]) => (<div key={l} style={{ textAlign:"center" }}><div className="metric-num">{n.replace("+","")}{n.includes("+") && <span>+</span>}</div><div className="metric-label">{l}</div></div>))}</div>
+          <div className="hero-metrics">{[["250+","Delegates"],["7","Committees"],["3","Editions"],["2","Conferences"]].map(([n,l]) => (<div key={l} style={{ textAlign:"center" }}><div className="metric-num">{n.replace("+","")}{n.includes("+") && <span>+</span>}</div><div className="metric-label">{l}</div></div>))}</div>
         </div>
         <div className="hero-scroll"><div className="scroll-line"/>Scroll</div>
       </section>
