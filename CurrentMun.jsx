@@ -1624,6 +1624,34 @@ body.cm-cinematic-scroll #current-register .cm-live-card:hover{
    sections no longer hold live transitions either. */
 .cm-stat,.cm-card,.cm-timeline-card,.cm-reg-panel,.cm-perk,.cm-award-card,.cm-step-card,.cm-special,.cm-live-card,.cm-preview-shell,.cm-committee-spotlight,.cm-experience-hero,.cm-about-stage,.cm-schedule,.cm-flow-map{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
 .cm-nav{backdrop-filter:blur(10px)}
+
+/* Mobile width safety: content wraps instead of being hidden by page overflow guards. */
+.cm-page > .cm-focus-view{position:fixed;inset:0;width:100%;height:100dvh;min-width:0}
+.cm-inner,.cm-hero-content,.cm-hero-visual,.cm-about-stage,.cm-live-card,.cm-preview-stage,.cm-preview-shell,.cm-preview-tabs,.cm-preview-tab,.cm-preview-frame,.cm-committee-console,.cm-committee-spotlight,.cm-card,.cm-award-card,.cm-special,.cm-timeline-card,.cm-contact-item,.cm-focus-frame{min-width:0;max-width:100%}
+.cm-card p,.cm-award-row span,.cm-special span,.cm-contact-item a,.cm-focus-title{overflow-wrap:anywhere;word-break:break-word}
+.cm-focus-frame{width:100%;min-height:0}
+@media(max-width:640px){
+  .cm-nav.cm-nav-pill{max-width:calc(100% - 20px)}
+  .cm-brand-btn{width:auto!important;flex:1;min-width:0;margin-bottom:0!important}
+  .cm-hamburger{flex:0 0 auto}
+  #current-awards .cm-awards-grid,#current-awards .cm-special-awards{grid-template-columns:minmax(0,1fr)!important}
+  .cm-command-deck{width:min(100%,310px)!important;min-width:0!important}
+  .cm-preview-stage,.cm-preview-shell{width:100%}
+  .cm-preview-tabs{padding:.6rem;gap:.4rem}
+  .cm-preview-tab{padding:.72rem .4rem;font-size:.58rem;letter-spacing:.1em}
+  .cm-focus-top{align-items:stretch;flex-wrap:wrap;gap:.65rem;padding:.8rem}
+  .cm-focus-title{width:100%}
+  .cm-focus-actions{display:grid;grid-template-columns:1fr 1fr;width:100%;gap:.5rem}
+  .cm-focus-actions a,.cm-focus-actions button{width:100%;text-align:center}
+}
+@media(max-width:480px){
+  #current-awards .cm-award-card{padding:1.1rem!important}
+  .cm-award-row,.cm-special{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:.35rem!important;align-items:start!important}
+  .cm-award-row strong,.cm-award-row span,.cm-special strong,.cm-special span{display:block;width:100%;min-width:0;text-align:left!important;overflow-wrap:anywhere}
+  .cm-awards-podium strong,.cm-awards-podium span{max-width:100%;overflow-wrap:anywhere}
+  .cm-footer-inner,.cm-footer-links{min-width:0;max-width:100%}
+  .cm-footer-links button,.cm-footer-links a{white-space:normal;text-align:left;overflow-wrap:anywhere}
+}
 `;
 
 function CinematicCanvas() {

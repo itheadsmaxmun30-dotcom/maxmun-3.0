@@ -2250,6 +2250,24 @@ section{content-visibility:visible!important;contain-intrinsic-size:auto!importa
 /* typography system: expressive editorial display + geometric interface text */
 .section-h,.hero-title,.metric-num,.countdown-bg-text,.ed-num,.cc-abbr,.stat-val,.quote-text,.portal-title,.success-title,.dash-greeting-name,.adm-ph-title,.adm-stat-num{font-family:var(--font-display)!important}
 .nav-brand,.nav-links,.hero-edition,.section-label,.countdown-label,.gcard-t,.ed-name,.metric-label,.cdown-u,.footer-brand{font-family:var(--font-mono)!important}
+
+/* Narrow-phone width safety for public pages and overlays. */
+.hero-content,.complaint-category-grid,.complaint-form-panel,.complaint-details-grid,.cmodal-content{min-width:0;max-width:100%}
+.toast{right:auto!important;width:min(320px,calc(100vw - 2rem));max-width:none;overflow-wrap:anywhere}
+.cinfo-val,.pf-val,.complaint-desc,.ann-body,.cred-val{overflow-wrap:anywhere;word-break:break-word}
+@media(max-width:640px){
+  .complaint-category-grid,.complaint-details-grid{grid-template-columns:minmax(0,1fr)!important}
+  .complaint-form-panel{padding:1.15rem!important}
+}
+@media(max-width:480px){
+  .hero-content{width:100%}
+  .hero-title{font-size:clamp(3.5rem,17vw,5rem)}
+  .hero-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.15rem}
+  .committees-tabs{flex-wrap:wrap}
+  .ctab{flex:1 1 100%;width:100%;padding:.65rem .75rem}
+  .cmodal-header{padding-right:4.5rem}
+  .hero .floating-seo-tags{display:none!important}
+}
 `;
 
 /* ═══════════════════════════════════════════════════════
@@ -2894,7 +2912,7 @@ function PublicComplaintForm({ showToast }) {
       {step === 1 && (
         <div>
           <div style={{ textAlign:"center", marginBottom:"1.5rem", color:"var(--silver)", fontSize:".82rem" }}>Select the category that best describes your issue</div>
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(280px, 1fr))", gap:"1rem" }}>
+          <div className="complaint-category-grid" style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(280px, 1fr))", gap:"1rem" }}>
             {COMPLAINT_CATEGORIES.map(cat => (
               <div key={cat.id} onClick={() => setCategory(cat)} style={{ padding:"1.2rem 1.4rem", borderRadius:14, border:`2px solid ${category?.id === cat.id ? "var(--azure)" : "var(--glassborder)"}`, background: category?.id === cat.id ? "rgba(0,80,255,.08)" : "var(--ghost)", cursor:"pointer", transition:"all .2s", display:"flex", alignItems:"flex-start", gap:"1rem" }}>
                 <div style={{ fontSize:"1.6rem", flexShrink:0 }}>{cat.icon}</div>
@@ -2914,7 +2932,7 @@ function PublicComplaintForm({ showToast }) {
       )}
 
       {step === 2 && (
-        <div style={{ background:"var(--ghost)", border:"1px solid var(--glassborder2)", borderRadius:20, padding:"2rem" }}>
+        <div className="complaint-form-panel" style={{ background:"var(--ghost)", border:"1px solid var(--glassborder2)", borderRadius:20, padding:"2rem" }}>
           <div style={{ display:"flex", alignItems:"center", gap:".75rem", marginBottom:"1.5rem", paddingBottom:"1rem", borderBottom:"1px solid var(--glassborder)" }}>
             <div style={{ fontSize:"1.4rem" }}>{category.icon}</div>
             <div>
@@ -2923,7 +2941,7 @@ function PublicComplaintForm({ showToast }) {
             </div>
             <button onClick={() => setStep(1)} style={{ marginLeft:"auto", padding:".3rem .8rem", borderRadius:50, border:"1px solid var(--glassborder)", background:"transparent", color:"var(--dim)", cursor:"pointer", fontSize:".7rem", fontFamily:"inherit" }}>Change</button>
           </div>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1rem", marginBottom:"1rem" }}>
+          <div className="complaint-details-grid" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1rem", marginBottom:"1rem" }}>
             <div className="fg"><label>Full Name *</label><input value={form.name} placeholder="Your name" onChange={e => setForm(p=>({...p,name:e.target.value}))} /></div>
             <div className="fg"><label>Email</label><input type="email" value={form.email} placeholder="you@email.com" onChange={e => setForm(p=>({...p,email:e.target.value}))} /></div>
           </div>
@@ -3612,6 +3630,25 @@ const PORTAL_STYLES = `
 @media(max-width:900px){.adm-sidebar{width:200px}.adm-main{margin-left:200px}}
 @media(max-width:768px){.pf-row{grid-template-columns:1fr}.adm-sidebar{width:100%;height:auto;position:static;flex-direction:row;flex-wrap:wrap}.adm-main{margin-left:0}.adm-stats{grid-template-columns:1fr 1fr}.portal-card,.portal-card-wide{max-width:100%;border-radius:var(--r16)}.portal-body{padding:1.4rem}.portal-card-top{padding:1.5rem 1.4rem 1.2rem}.portal-title{font-size:1.45rem}}
 @media(max-width:480px){.adm-stats{grid-template-columns:1fr 1fr}.portal-page{padding:1rem}.portal-body{padding:1.2rem}.pf input,.pf select,.pf textarea{font-size:.82rem;padding:.7rem .85rem}.portal-btn{font-size:.74rem;padding:.85rem}.admin-modal-body,.admin-modal-header{padding:1.2rem}}
+
+/* Dashboard and user-generated content must shrink and wrap on phones. */
+.adm-main,.adm-ph,.adm-ann-content,.adm-cmp-card,.profile-field,.cinfo>div{min-width:0}
+.adm-cmp-subject,.adm-cmp-desc,.adm-ann-content,.adm-tbl-name,.adm-tbl-id,.adm-note-box{overflow-wrap:anywhere;word-break:break-word}
+@media(max-width:768px){
+  .adm-wrap{flex-direction:column}
+  .adm-sidebar{width:100%;flex-direction:column}
+  .adm-main{width:100%;min-width:0;margin-left:0;padding:1.5rem 1rem 3rem}
+  .adm-nav{width:100%}
+  .admin-overview-grid{grid-template-columns:minmax(0,1fr)!important}
+}
+@media(max-width:480px){
+  .adm-stats{grid-template-columns:minmax(0,1fr)}
+  .adm-search{min-width:0;width:100%}
+  .adm-ann-card{flex-direction:column}
+  .adm-ann-actions{width:100%;flex-wrap:wrap}
+  .adm-ph-btns,.adm-ph-btns button{width:100%}
+  .adm-btn-gold,.adm-btn-blue,.adm-btn-ghost{white-space:normal}
+}
 `;
 
 /* ─── UTILITY ─── */
@@ -4097,7 +4134,7 @@ function AdminDashboard({ onNavigate }) {
                 </div>
               ))}
             </div>
-            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1.5rem", flexWrap:"wrap" }}>
+            <div className="admin-overview-grid" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1.5rem", flexWrap:"wrap" }}>
               <div style={{ background:"rgba(8,14,28,.95)", border:"1px solid rgba(255,255,255,.07)", borderRadius:13, padding:"1.4rem" }}>
                 <div style={{ fontSize:".65rem", color:"var(--azure3)", letterSpacing:"2px", textTransform:"uppercase", fontWeight:700, marginBottom:"1rem" }}>Recent Delegates</div>
                 {delegates.slice(0,5).map(d => (
