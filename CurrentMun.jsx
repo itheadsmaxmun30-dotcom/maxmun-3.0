@@ -445,9 +445,9 @@ body.cm-cinematic-scroll .cm-signal-strip{border-color:rgba(120,193,255,.34);box
 @keyframes cmDeckRingSpin{from{transform:translateZ(16px) rotate(0deg)}to{transform:translateZ(16px) rotate(360deg)}}
 @keyframes cmDeckCoreSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 .cm-section{scroll-margin-top:92px}
-.cm-section .cm-inner{transition:opacity .85s cubic-bezier(.22,.88,.24,1),transform .95s cubic-bezier(.16,.84,.2,1),filter .85s ease}
-.cm-section:not(.cm-in-view) .cm-inner{opacity:.58;transform:perspective(1000px) translateY(46px) rotateX(3deg) scale(.985);filter:saturate(.78)}
-.cm-section.cm-in-view .cm-inner{opacity:1;transform:perspective(1000px) translateY(0) rotateX(0) scale(1);filter:saturate(1.06)}
+.cm-section .cm-inner{transition:opacity .8s cubic-bezier(.22,.88,.24,1),transform .85s cubic-bezier(.16,.84,.2,1)}
+.cm-section:not(.cm-in-view) .cm-inner{opacity:.6;transform:translateY(42px)}
+.cm-section.cm-in-view .cm-inner{opacity:1;transform:none}
 .cm-section.cm-in-view::before{
   opacity:1;background:
     radial-gradient(circle at 18% 16%,rgba(56,189,248,.16),transparent 30%),
@@ -473,7 +473,6 @@ body.cm-cinematic-scroll .cm-signal-strip{border-color:rgba(120,193,255,.34);box
   box-shadow:0 34px 115px rgba(0,0,0,.42),0 0 70px rgba(56,189,248,.10),inset 0 1px 0 rgba(255,255,255,.07);
 }
 .cm-card,.cm-perk,.cm-stat,.cm-award-card,.cm-step-card,.cm-special,.cm-timeline-card{transition:transform .32s ease,border-color .32s ease,box-shadow .32s ease,filter .32s ease}
-.cm-section.cm-in-view .cm-card,.cm-section.cm-in-view .cm-perk,.cm-section.cm-in-view .cm-stat,.cm-section.cm-in-view .cm-award-card,.cm-section.cm-in-view .cm-step-card,.cm-section.cm-in-view .cm-special,.cm-section.cm-in-view .cm-timeline-card{filter:saturate(1.06)}
 .cm-card:hover,.cm-perk:hover,.cm-award-card:hover,.cm-step-card:hover,.cm-special:hover,.cm-timeline-card:hover{filter:saturate(1.18) brightness(1.05)}
 
 /* visible orbital upgrade: CSS-only 3D motion, no canvas/WebGL cost */
@@ -1615,6 +1614,13 @@ body.cm-cinematic-scroll #current-register .cm-live-card:hover{
   .chip-two{right:12%!important}
 }
 
+/* ── performance pass: integrated onto the main site's light engine ──
+   backdrop-filter forces a full-viewport repaint per scrolled frame for
+   every card it touches; over a near-opaque dark page the visual delta
+   is nil, so it goes. Reveals are one-way (JS unobserves), so hidden
+   sections no longer hold live transitions either. */
+.cm-stat,.cm-card,.cm-timeline-card,.cm-reg-panel,.cm-perk,.cm-award-card,.cm-step-card,.cm-special,.cm-live-card,.cm-preview-shell,.cm-committee-spotlight,.cm-experience-hero,.cm-about-stage,.cm-schedule,.cm-flow-map{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.cm-nav{backdrop-filter:blur(10px)}
 `;
 
 function CinematicCanvas() {
@@ -2119,10 +2125,12 @@ export default function CurrentMunPage({ onBack }) {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          entry.target.classList.toggle("cm-in-view", entry.isIntersecting);
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("cm-in-view");
+          observer.unobserve(entry.target);
         });
       },
-      { rootMargin: "-20% 0px -30% 0px", threshold: 0.14 }
+      { rootMargin: "-6% 0px -10% 0px", threshold: 0.1 }
     );
 
     sections.forEach((section) => observer.observe(section));
@@ -2156,7 +2164,13 @@ export default function CurrentMunPage({ onBack }) {
       (entries) => {
         entries.forEach((entry) => {
           const item = state.find((s) => s.el === entry.target);
-          if (item) item.visible = entry.isIntersecting;
+          if (!item) return;
+          item.visible = entry.isIntersecting;
+          if (entry.isIntersecting) {
+            item.measured = false;
+            // reveal transitions translate ancestors; settle then re-measure
+            window.setTimeout(() => { item.measured = false; }, 1000);
+          }
         });
       },
       { rootMargin: "120px 0px 120px 0px", threshold: 0 }
@@ -2176,15 +2190,28 @@ export default function CurrentMunPage({ onBack }) {
 
     const LERP = 0.16; // smoothing factor: higher = snappier, lower = floatier
 
+    // Cache element geometry in document coordinates so the rAF loop never
+    // reads layout (getBoundingClientRect per frame forces synchronous
+    // reflow after the style writes below — the old source of jank).
+    const measure = (item) => {
+      const rect = item.el.getBoundingClientRect();
+      item.docX = rect.left + rect.width / 2;
+      item.docY = rect.top + window.scrollY + rect.height * item.bias;
+      item.measured = true;
+    };
+    const remeasureAll = () => state.forEach((item) => { item.measured = false; });
+    window.addEventListener("resize", remeasureAll, { passive: true });
+
     let raf = 0;
     const tick = () => {
       raf = requestAnimationFrame(tick);
+      const scrollY = window.scrollY;
       for (let i = 0; i < state.length; i += 1) {
         const item = state[i];
         if (!item.visible) continue;
-        const rect = item.el.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height * item.bias;
+        if (!item.measured) measure(item);
+        const centerX = item.docX;
+        const centerY = item.docY - scrollY;
 
         if (pointer.active) {
           const dx = pointer.x - centerX;
@@ -2212,6 +2239,7 @@ export default function CurrentMunPage({ onBack }) {
       io.disconnect();
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerout", onPointerLeave);
+      window.removeEventListener("resize", remeasureAll);
       page.classList.remove("cm-eye-live");
     };
   }, []);
@@ -2219,8 +2247,9 @@ export default function CurrentMunPage({ onBack }) {
   return (
     <div ref={pageRef} className="cm-page" style={{ "--scroll-progress": "0%" }}>
       <style>{CURRENT_MUN_STYLES}</style>
-      <CinematicCanvas />
-      <div className="cm-page-aurora" aria-hidden="true" />
+      {/* CinematicCanvas + cm-page-aurora retired: the global GoatedFX layer
+          (starfield, aurora, spotlight) already supplies the ambience at a
+          fraction of the cost — one canvas instead of two plus a blurred div. */}
       <nav className={`cm-nav cm-nav-pill${isNavOpen ? " cm-nav-open" : ""}`}>
         <button className="cm-brand cm-brand-btn" onClick={() => smoothTo("current-home")}>MAXMUN <span>3.0</span></button>
         <button 

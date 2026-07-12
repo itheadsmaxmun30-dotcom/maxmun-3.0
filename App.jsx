@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import CurrentMunPage from "./CurrentMun.jsx";
 import LockAccess from "./src/components/LockAccess.jsx";
+import FloatingSEOTags from "./src/components/FloatingSEOTags.jsx";
 import GoatedFX from "./src/components/GoatedFX.jsx";
 import { forceScrollTop, smoothScrollToId } from "./src/utils/smoothScroll.js";
 
@@ -2104,6 +2105,61 @@ section{content-visibility:visible!important;contain-intrinsic-size:auto!importa
   box-shadow:0 34px 96px rgba(215,180,106,.34),0 0 76px rgba(120,193,255,.28)!important;
 }
 
+/* ── single-entry portal: one gateway, hyperspace exit ── */
+.lock-enter-wrap{display:flex;flex-direction:column;align-items:center;gap:1.15rem;margin-top:1.6rem}
+.lock-enter-btn{position:relative;width:min(200px,52vw);aspect-ratio:1;border-radius:50%;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.32rem;background:radial-gradient(circle at 50% 38%,rgba(16,38,74,.94),rgba(3,8,18,.96) 72%);border:1px solid rgba(120,193,255,.42);color:var(--platinum);font-family:'Space Grotesk',sans-serif;transition:transform .4s cubic-bezier(.34,1.56,.64,1),box-shadow .4s ease,border-color .4s ease;box-shadow:0 0 70px rgba(0,80,255,.28),0 0 26px rgba(120,193,255,.18),inset 0 0 46px rgba(61,139,255,.14)}
+.lock-enter-btn strong{font-family:'Syncopate',sans-serif;font-size:1.28rem;letter-spacing:.34em;text-indent:.34em;color:#fff;text-shadow:0 0 24px rgba(120,193,255,.6)}
+.lock-enter-eyebrow{font-size:.56rem;font-weight:700;letter-spacing:.42em;text-transform:uppercase;color:var(--gold2)}
+.lock-enter-sub{font-size:.55rem;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--silver)}
+.lock-enter-orbit{position:absolute;inset:-12px;border-radius:50%;border:1px dashed rgba(232,184,109,.5);animation:lockOrbitSlow 9s linear infinite;pointer-events:none}
+.lock-enter-orbit::before{content:"";position:absolute;top:-4px;left:50%;width:7px;height:7px;margin-left:-3px;border-radius:50%;background:var(--gold2);box-shadow:0 0 16px var(--gold2),0 0 30px rgba(120,193,255,.5)}
+@keyframes lockOrbitSlow{to{transform:rotate(360deg)}}
+.lock-enter-btn::before{content:"";position:absolute;inset:-1px;border-radius:50%;padding:1px;background:conic-gradient(from 0deg,transparent 0 18%,rgba(120,193,255,.9) 26%,rgba(245,212,154,.95) 34%,transparent 42% 100%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:lockSweep 3.4s linear infinite;pointer-events:none}
+@keyframes lockSweep{to{transform:rotate(360deg)}}
+.lock-enter-btn::after{content:"";position:absolute;inset:14%;border-radius:50%;border:1px solid rgba(120,193,255,.22);pointer-events:none;animation:lockCorePulse 2.6s ease-in-out infinite}
+@keyframes lockCorePulse{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.08);opacity:1}}
+.lock-enter-btn:hover{transform:scale(1.07) translateY(-3px);border-color:rgba(245,212,154,.8);box-shadow:0 0 110px rgba(0,80,255,.5),0 0 40px rgba(200,149,58,.4),inset 0 0 60px rgba(61,139,255,.2)}
+.lock-enter-hint{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--dim)}
+
+/* hyperspace warp-out sequence */
+.lock-warp{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;z-index:6;perspective:800px}
+.lock-warp i{position:absolute;width:14vmax;height:14vmax;border-radius:50%;border:2px solid rgba(120,193,255,.85);opacity:0;box-shadow:0 0 46px rgba(61,139,255,.55),inset 0 0 34px rgba(120,193,255,.28)}
+.lock-warp i:nth-child(2n){border-color:rgba(245,212,154,.9);box-shadow:0 0 46px rgba(200,149,58,.5),inset 0 0 34px rgba(245,212,154,.25)}
+.lock-warp-burst{position:absolute;width:130vmax;height:130vmax;border-radius:50%;opacity:0;background:repeating-conic-gradient(from 0deg,rgba(120,193,255,.15) 0deg 1.6deg,transparent 1.6deg 8deg);mix-blend-mode:screen}
+.lock-warp-flash{position:fixed;inset:0;opacity:0;pointer-events:none;z-index:7;background:radial-gradient(circle at 50% 50%,rgba(255,248,230,.96),rgba(120,193,255,.42) 44%,transparent 74%)}
+.lock-access.entering{pointer-events:none}
+/* the card carries an !important transform, which outranks keyframes —
+   so the fly-through is a transition between two !important states */
+.lock-access.entering .lock-access-card{
+  transform:translate3d(0,var(--lock-card-y),0) translateZ(760px) rotateX(9deg) scale(1.42)!important;
+  opacity:0;filter:blur(16px);
+  transition:transform .92s cubic-bezier(.72,.02,.9,.44),opacity .88s ease .08s,filter .9s ease;
+}
+.lock-access.entering .lock-warp i{animation:lockTunnel .95s cubic-bezier(.52,0,.82,.42) forwards}
+.lock-access.entering .lock-warp i:nth-child(1){animation-delay:.04s}
+.lock-access.entering .lock-warp i:nth-child(2){animation-delay:.13s}
+.lock-access.entering .lock-warp i:nth-child(3){animation-delay:.22s}
+.lock-access.entering .lock-warp i:nth-child(4){animation-delay:.31s}
+.lock-access.entering .lock-warp i:nth-child(5){animation-delay:.4s}
+@keyframes lockTunnel{0%{transform:scale(.1) translateZ(-300px);opacity:0}22%{opacity:1}100%{transform:scale(8.5) translateZ(260px);opacity:0}}
+.lock-access.entering .lock-warp-burst{animation:lockBurst 1s cubic-bezier(.6,0,.9,.5) .08s forwards}
+@keyframes lockBurst{0%{transform:scale(.04) rotate(0deg);opacity:0}30%{opacity:.9}100%{transform:scale(1.3) rotate(55deg);opacity:0}}
+.lock-access.entering .lock-warp-flash{animation:lockFlash .52s ease-out .6s forwards}
+@keyframes lockFlash{0%{opacity:0}38%{opacity:.95}100%{opacity:0}}
+.lock-access.entering .lock-access-mesh,.lock-access.entering .lock-access-rings{animation:lockBgRush .9s ease-in forwards}
+@keyframes lockBgRush{to{transform:scale(1.75);opacity:0;filter:blur(12px)}}
+.lock-access.entering .lock-holo-object,.lock-access.entering .floating-seo-tag{animation:lockScatter .72s cubic-bezier(.55,0,.85,.4) forwards!important}
+@keyframes lockScatter{to{transform:scale(2.6) translateY(-36px);opacity:0;filter:blur(9px)}}
+.lock-access.entering .lock-enter-btn{transform:scale(.92);opacity:.35;transition:transform .5s ease,opacity .5s ease}
+@media(prefers-reduced-motion:reduce){.lock-warp,.lock-warp-flash{display:none}.lock-access.entering .lock-access-card{transition:opacity .4s ease;transform:translate3d(0,var(--lock-card-y),0)!important;filter:none}.lock-access.entering .lock-holo-object,.lock-access.entering .floating-seo-tag{animation:none!important}}
+@media(max-width:640px){.lock-enter-btn{width:min(170px,58vw)}}
+
+/* ── hero: holographic crest + drifting keyword tags ── */
+.hero-crest{position:absolute;left:50%;top:47%;width:clamp(280px,42vw,540px);transform:translate(-50%,-50%);opacity:.13;pointer-events:none;z-index:1;filter:drop-shadow(0 0 70px rgba(61,139,255,.5));animation:heroCrestFloat 9s ease-in-out infinite}
+.hero-crest img{width:100%;height:auto;display:block}
+@keyframes heroCrestFloat{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.11}50%{transform:translate(-50%,-52.5%) scale(1.04);opacity:.17}}
+.hero .floating-seo-tags{position:absolute;inset:0;z-index:1;pointer-events:none}
+@media(max-width:760px){.hero-crest{width:74vw;opacity:.09}}
 `;
 
 /* ═══════════════════════════════════════════════════════
@@ -2929,6 +2985,8 @@ function MaxMUNHome({ onNavigateToRegister, onNavigateToAdmin, onNavigateToCurre
             <circle cx="200" cy="200" r="180" stroke="#1a6fff" strokeWidth=".5" strokeDasharray="4 8" opacity=".3" />
           </svg>
         </div>
+        <FloatingSEOTags />
+        <div className="hero-crest" aria-hidden="true"><img src="/maxmun-crest-centered.png" alt="" /></div>
         <div className="hero-content">
           <div className="hero-overline"><div className="hero-overline-line" />Maxfort School Dwarka · New Delhi · India<div className="hero-overline-line-r" /></div>
           <div className="hero-title-wrap"><h1 className="hero-title">MAX<span className="hero-title-accent">MUN</span></h1></div>
@@ -4381,7 +4439,7 @@ export default function App() {
       <style>{STYLES}</style>
       <style>{PORTAL_STYLES}</style>
       {page === "home" && <MaxMUNHome onNavigateToRegister={() => navigate("current-register")} onNavigateToAdmin={() => navigate("admin-login")} onNavigateToCurrentMun={() => navigate("current-mun")} />}
-      {page === "current-mun" && <CurrentMunPage onBack={() => navigate("home")} />}
+      {page === "current-mun" && <><HomeCursorLayer active /><div className="noise-layer" /><CurrentMunPage onBack={() => navigate("home")} /></>}
       {page === "admin-login" && <><FXCanvas /><div className="noise-layer" /><AdminLogin onNavigate={navigate} /></>}
       {page === "admin-dashboard" && <AdminDashboard onNavigate={navigate} />}
       <GoatedFX />

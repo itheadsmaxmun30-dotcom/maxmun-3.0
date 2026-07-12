@@ -1,8 +1,18 @@
+import { useState } from "react";
 import FloatingSEOTags from "./FloatingSEOTags.jsx";
 
 export default function LockAccess({ onPrevious, onCurrent }) {
+  const [entering, setEntering] = useState(false);
+
+  const enter = () => {
+    if (entering) return;
+    setEntering(true);
+    try { window.dispatchEvent(new CustomEvent("gfx-warp")); } catch { /* effects are optional */ }
+    setTimeout(() => onPrevious?.(), 1120);
+  };
+
   return (
-    <section className="lock-access" aria-label="MAXMUN entry screen">
+    <section className={`lock-access${entering ? " entering" : ""}`} aria-label="MAXMUN entry screen">
       <div className="lock-access-mesh" aria-hidden="true" />
       <div className="lock-access-rings" aria-hidden="true" />
       <div className="lock-holo-field" aria-hidden="true">
@@ -15,6 +25,12 @@ export default function LockAccess({ onPrevious, onCurrent }) {
       </div>
       <FloatingSEOTags />
 
+      <div className="lock-warp" aria-hidden="true">
+        <i /><i /><i /><i /><i />
+        <span className="lock-warp-burst" />
+      </div>
+      <div className="lock-warp-flash" aria-hidden="true" />
+
       <div className="lock-access-card">
         <div className="lock-access-top">
           <div className="lock-logo-shell">
@@ -26,36 +42,20 @@ export default function LockAccess({ onPrevious, onCurrent }) {
             <em>The Rebirth</em>
           </div>
         </div>
-        <div className="lock-kicker">Choose Your Access</div>
+        <div className="lock-kicker">Maxfort School Dwarka Presents</div>
         <div className="lock-title">MAX<span>MUN</span></div>
         <p className="lock-text">
-          Enter the archive to learn about previous editions, or jump straight into the live MAXMUN 3.0 registration and current conference hub.
+          One gateway to the complete MAXMUN universe — live MAXMUN 3.0 registration, the delegate
+          matrix, final committees, awards, and the legacy archive of every edition.
         </p>
-        <div className="lock-actions">
-          <button className="lock-choice" onClick={onPrevious}>
-            <strong>Know Previous Versions</strong>
-            <span>Explore MaxMUN 1.0 and 2.0 legacy, committees, Executive Boards, and archive.</span>
+        <div className="lock-enter-wrap">
+          <button className="lock-enter-btn" onClick={enter} disabled={entering}>
+            <span className="lock-enter-orbit" aria-hidden="true" />
+            <span className="lock-enter-eyebrow">Initialize</span>
+            <strong>ENTER</strong>
+            <span className="lock-enter-sub">MAXMUN Universe</span>
           </button>
-          <button className="lock-choice primary lock-choice-current" onClick={onCurrent}>
-            <span className="lock-current-status">Live MAXMUN 3.0 Hub</span>
-            <span className="lock-current-head">
-              <strong>Register & Explore Current MUN</strong>
-              <span className="lock-current-arrow" aria-hidden="true">GO</span>
-            </span>
-            <span className="lock-current-copy">
-              Open registrations, preview the delegate matrix, scan final committees, awards, schedules, and conference support in one polished hub.
-            </span>
-            <span className="lock-current-pills" aria-hidden="true">
-              <span>Form</span>
-              <span>Matrix</span>
-              <span>7 Committees</span>
-            </span>
-            <span className="lock-current-stats" aria-hidden="true">
-              <span><b>400+</b> Past Delegates</span>
-              <span><b>2</b> Days</span>
-              <span><b>Rs. 2K</b> Fee</span>
-            </span>
-          </button>
+          <div className="lock-enter-hint">Registration · Matrix · Committees · Legacy Archive</div>
         </div>
       </div>
     </section>

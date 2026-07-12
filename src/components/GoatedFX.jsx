@@ -94,6 +94,11 @@ html.gfx-on .section-label::after{content:"";position:absolute;left:0;right:0;bo
 /* ---- richer scrollbar ---- */
 ::-webkit-scrollbar{width:5px}
 ::-webkit-scrollbar-thumb{background:linear-gradient(rgba(0,80,255,.9),rgba(120,193,255,.8),rgba(200,149,58,.9));border-radius:4px;box-shadow:0 0 8px rgba(61,139,255,.5)}
+
+/* ---- post-warp landing: main site materializes ---- */
+html.gfx-landing .hero-content{animation:gfxLand .95s cubic-bezier(.22,1,.36,1) backwards}
+html.gfx-landing .nav{animation:gfxLand .8s cubic-bezier(.22,1,.36,1) backwards}
+@keyframes gfxLand{from{opacity:0;transform:scale(1.05) translateY(14px);filter:blur(12px)}}
 `;
 
 const REVEAL_TARGETS = [
@@ -102,7 +107,7 @@ const REVEAL_TARGETS = [
   ".cm-award-row", ".podium-side", ".podium-main", ".contact-panel",
 ].join(",");
 
-const MAGNET_TARGETS = ".btn-primary,.btn-ghost,.nav-cta,.cm-btn,.portal-btn";
+const MAGNET_TARGETS = ".btn-primary,.btn-ghost,.nav-cta,.cm-btn,.portal-btn,.lock-enter-btn";
 
 const SPARK_COLORS = [
   "radial-gradient(circle,#f5d49a,#c8953a)",
@@ -228,6 +233,14 @@ export default function GoatedFX() {
     /* -- pointer state -- */
     let mx = -2000, my = -2000, sx = -2000, sy = -2000;
     if (fine) on(window, "pointermove", (e) => { mx = e.clientX; my = e.clientY; }, { passive: true });
+
+    /* -- entry-portal warp: main site materializes after the flash -- */
+    on(window, "gfx-warp", () => {
+      setTimeout(() => {
+        root.classList.add("gfx-landing");
+        setTimeout(() => root.classList.remove("gfx-landing"), 2200);
+      }, 980);
+    });
 
     /* -- magnetic buttons -- */
     if (fine) {
@@ -374,6 +387,12 @@ export default function GoatedFX() {
     const meteors = [];
     let nextMeteor = performance.now() + 1800 + Math.random() * 2500;
 
+    /* hyperspace: the entry portal dispatches gfx-warp — stars blast
+       radially outward from center like a jump to lightspeed */
+    let radialWarp = 0;
+    const onWarp = () => { radialWarp = 1.6; };
+    window.addEventListener("gfx-warp", onWarp);
+
     const onMove = (e) => { mx = e.clientX; my = e.clientY; };
     if (fine) window.addEventListener("pointermove", onMove, { passive: true });
 
@@ -388,6 +407,31 @@ export default function GoatedFX() {
       lastY = y;
       const warp = Math.max(-1, Math.min(1, vel / 30));
       const streak = Math.abs(warp);
+
+      if (radialWarp > 0.02) {
+        radialWarp *= 0.95;
+        const cx = W / 2, cy = H / 2;
+        for (const s of stars) {
+          const dxc = s.x - cx, dyc = s.y - cy;
+          const d = Math.hypot(dxc, dyc) + 1;
+          const ux = dxc / d, uy = dyc / d;
+          const len = Math.min(240, (12 + d * 0.22) * radialWarp);
+          const grad = ctx.createLinearGradient(s.x, s.y, s.x + ux * len, s.y + uy * len);
+          grad.addColorStop(0, s.gold ? "rgba(245,212,154,.9)" : "rgba(196,228,255,.9)");
+          grad.addColorStop(1, "rgba(0,80,255,0)");
+          ctx.strokeStyle = grad;
+          ctx.lineWidth = s.r * 1.1;
+          ctx.beginPath(); ctx.moveTo(s.x, s.y); ctx.lineTo(s.x + ux * len, s.y + uy * len); ctx.stroke();
+          s.x += ux * radialWarp * 3.2;
+          s.y += uy * radialWarp * 3.2;
+          if (s.x < -8 || s.x > W + 8 || s.y < -8 || s.y > H + 8) {
+            s.x = cx + (Math.random() - 0.5) * W * 0.5;
+            s.y = cy + (Math.random() - 0.5) * H * 0.5;
+          }
+        }
+        raf = requestAnimationFrame(draw);
+        return;
+      }
 
       for (const s of stars) {
         s.tw += s.ts;
@@ -481,6 +525,7 @@ export default function GoatedFX() {
       running = false;
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
+      window.removeEventListener("gfx-warp", onWarp);
       if (fine) window.removeEventListener("pointermove", onMove);
       document.removeEventListener("visibilitychange", onVis);
     };

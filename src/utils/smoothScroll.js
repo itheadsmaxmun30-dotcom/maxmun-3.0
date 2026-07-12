@@ -23,16 +23,10 @@ export function smoothScrollToId(id, offset = 90) {
   }
 
   document.body.classList.add("cm-cinematic-scroll");
-  const duration = Math.min(3600, Math.max(780, Math.abs(distance) * 0.62));
+  // Full-framerate scroll: no frame gating — a throttled scroll reads as lag,
+  // and window.scrollTo is cheap. Shorter travel time keeps it snappy.
+  const duration = Math.min(1400, Math.max(560, Math.abs(distance) * 0.42));
   const startTime = performance.now();
-  const frameGap = Math.abs(distance) > 1800
-    ? 54
-    : Math.abs(distance) > 900
-      ? 42
-      : Math.abs(distance) > 520
-        ? 30
-      : 16;
-  let lastStep = 0;
 
   function easeInOutCubic(t) {
     return t < 0.5
@@ -41,11 +35,6 @@ export function smoothScrollToId(id, offset = 90) {
   }
 
   function frame(now) {
-    if (now - lastStep < frameGap) {
-      scrollAnimationFrame = requestAnimationFrame(frame);
-      return;
-    }
-    lastStep = now;
     const progress = Math.min((now - startTime) / duration, 1);
     const eased = easeInOutCubic(progress);
     window.scrollTo(0, start + distance * eased);
