@@ -409,7 +409,7 @@ export default function GoatedFX() {
       const streak = Math.abs(warp);
 
       if (radialWarp > 0.02) {
-        radialWarp *= 0.95;
+        radialWarp *= 0.965;
         const cx = W / 2, cy = H / 2;
         for (const s of stars) {
           const dxc = s.x - cx, dyc = s.y - cy;

@@ -2287,8 +2287,8 @@ export default function CurrentMunPage({ onBack }) {
       <ReactiveHero smoothTo={smoothTo} />
       <div className="cm-signal-strip" aria-hidden="true">
         <div className="cm-signal-track">
-          <span>Registration Open</span><span>Matrix Live</span><span>7 Committees</span><span>400+ Past Delegates</span><span>Cash Prizes</span><span>Senior Conference</span>
-          <span>Registration Open</span><span>Matrix Live</span><span>7 Committees</span><span>400+ Past Delegates</span><span>Cash Prizes</span><span>Senior Conference</span>
+          <span>Registration Open</span><span>Matrix Live</span><span>7 Committees</span><span>250+ Past Delegates</span><span>Cash Prizes</span><span>Senior Conference</span>
+          <span>Registration Open</span><span>Matrix Live</span><span>7 Committees</span><span>250+ Past Delegates</span><span>Cash Prizes</span><span>Senior Conference</span>
         </div>
       </div>
 
@@ -2313,7 +2313,7 @@ export default function CurrentMunPage({ onBack }) {
               <span className="cm-radar-node node-d">Schedule</span>
             </div>
             <div className="cm-stats">
-              <div className="cm-stat"><strong>400+</strong><span>Past Delegates</span></div>
+              <div className="cm-stat"><strong>250+</strong><span>Past Delegates</span></div>
               <div className="cm-stat"><strong>2</strong><span>Conference Days</span></div>
               <div className="cm-stat"><strong>Delhi</strong><span>Region</span></div>
               <div className="cm-stat"><strong>7</strong><span>Committees</span></div>
@@ -2478,7 +2478,7 @@ export default function CurrentMunPage({ onBack }) {
               <h3>Debate, recognition, socials, and a clean conference flow in one senior edition.</h3>
             </div>
             <div className="cm-experience-metrics" aria-label="Delegate experience highlights">
-              <div><strong>400+</strong><span>Past Delegates</span></div>
+              <div><strong>250+</strong><span>Past Delegates</span></div>
               <div><strong>7</strong><span>Live Committees</span></div>
               <div><strong>2</strong><span>Power Days</span></div>
             </div>

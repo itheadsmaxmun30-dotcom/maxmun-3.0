@@ -7,8 +7,13 @@ export default function LockAccess({ onPrevious, onCurrent }) {
   const enter = () => {
     if (entering) return;
     setEntering(true);
+    // second dispatch as the gate fades: the gate background is opaque, so
+    // the starfield hyperspace must fire again to be visible over the hero
     try { window.dispatchEvent(new CustomEvent("gfx-warp")); } catch { /* effects are optional */ }
-    setTimeout(() => onPrevious?.(), 1120);
+    setTimeout(() => {
+      try { window.dispatchEvent(new CustomEvent("gfx-warp")); } catch { /* ignore */ }
+    }, 760);
+    setTimeout(() => onPrevious?.(), 1280);
   };
 
   return (
@@ -26,9 +31,14 @@ export default function LockAccess({ onPrevious, onCurrent }) {
       <FloatingSEOTags />
 
       <div className="lock-warp" aria-hidden="true">
-        <i /><i /><i /><i /><i />
+        <span className="lock-warp-stars s1" />
+        <span className="lock-warp-stars s2" />
+        <span className="lock-warp-stars s3" />
+        <i /><i /><i /><i /><i /><i /><i /><i />
         <span className="lock-warp-burst" />
       </div>
+      <div className="lock-warp-chroma chroma-a" aria-hidden="true" />
+      <div className="lock-warp-chroma chroma-b" aria-hidden="true" />
       <div className="lock-warp-flash" aria-hidden="true" />
 
       <div className="lock-access-card">

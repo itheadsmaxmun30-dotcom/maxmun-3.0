@@ -2121,45 +2121,80 @@ section{content-visibility:visible!important;contain-intrinsic-size:auto!importa
 .lock-enter-btn:hover{transform:scale(1.07) translateY(-3px);border-color:rgba(245,212,154,.8);box-shadow:0 0 110px rgba(0,80,255,.5),0 0 40px rgba(200,149,58,.4),inset 0 0 60px rgba(61,139,255,.2)}
 .lock-enter-hint{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--dim)}
 
-/* hyperspace warp-out sequence */
-.lock-warp{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;z-index:6;perspective:800px}
-.lock-warp i{position:absolute;width:14vmax;height:14vmax;border-radius:50%;border:2px solid rgba(120,193,255,.85);opacity:0;box-shadow:0 0 46px rgba(61,139,255,.55),inset 0 0 34px rgba(120,193,255,.28)}
-.lock-warp i:nth-child(2n){border-color:rgba(245,212,154,.9);box-shadow:0 0 46px rgba(200,149,58,.5),inset 0 0 34px rgba(245,212,154,.25)}
-.lock-warp-burst{position:absolute;width:130vmax;height:130vmax;border-radius:50%;opacity:0;background:repeating-conic-gradient(from 0deg,rgba(120,193,255,.15) 0deg 1.6deg,transparent 1.6deg 8deg);mix-blend-mode:screen}
-.lock-warp-flash{position:fixed;inset:0;opacity:0;pointer-events:none;z-index:7;background:radial-gradient(circle at 50% 50%,rgba(255,248,230,.96),rgba(120,193,255,.42) 44%,transparent 74%)}
-.lock-access.entering{pointer-events:none}
+/* hyperspace warp-out sequence — every layer explicitly centered
+   (absolutely positioned grid children land at the static position,
+   NOT the grid center, which silently killed the first version) */
+.lock-warp{position:absolute;inset:0;pointer-events:none;z-index:6;perspective:760px;overflow:hidden}
+.lock-warp i{position:absolute;left:50%;top:50%;width:16vmax;height:16vmax;margin:-8vmax 0 0 -8vmax;border-radius:50%;border:3px solid rgba(120,193,255,.9);opacity:0;box-shadow:0 0 70px rgba(61,139,255,.7),0 0 24px rgba(120,193,255,.9),inset 0 0 44px rgba(120,193,255,.35)}
+.lock-warp i:nth-of-type(2n){border-color:rgba(245,212,154,.95);box-shadow:0 0 70px rgba(200,149,58,.65),0 0 24px rgba(245,212,154,.9),inset 0 0 44px rgba(245,212,154,.3)}
+.lock-warp-stars{position:absolute;left:50%;top:50%;width:140vmax;height:140vmax;margin:-70vmax 0 0 -70vmax;border-radius:50%;opacity:0;mix-blend-mode:screen;background-image:
+  radial-gradient(2px 2px at 12% 24%,rgba(196,228,255,.9),transparent 55%),
+  radial-gradient(2px 2px at 78% 16%,rgba(245,212,154,.85),transparent 55%),
+  radial-gradient(1.6px 1.6px at 34% 68%,rgba(255,255,255,.9),transparent 55%),
+  radial-gradient(1.6px 1.6px at 62% 42%,rgba(196,228,255,.8),transparent 55%),
+  radial-gradient(2px 2px at 88% 74%,rgba(120,193,255,.85),transparent 55%),
+  radial-gradient(1.4px 1.4px at 22% 86%,rgba(245,212,154,.8),transparent 55%),
+  radial-gradient(1.8px 1.8px at 48% 12%,rgba(255,255,255,.85),transparent 55%),
+  radial-gradient(1.5px 1.5px at 70% 88%,rgba(196,228,255,.85),transparent 55%),
+  radial-gradient(1.8px 1.8px at 8% 52%,rgba(255,255,255,.75),transparent 55%),
+  radial-gradient(1.5px 1.5px at 92% 40%,rgba(245,212,154,.8),transparent 55%)}
+.lock-warp-burst{position:absolute;left:50%;top:50%;width:150vmax;height:150vmax;margin:-75vmax 0 0 -75vmax;border-radius:50%;opacity:0;background:repeating-conic-gradient(from 0deg,rgba(120,193,255,.3) 0deg 1.4deg,transparent 1.4deg 6.5deg),repeating-conic-gradient(from 3deg,rgba(245,212,154,.16) 0deg 1deg,transparent 1deg 11deg);mix-blend-mode:screen}
+.lock-warp-chroma{position:fixed;inset:0;opacity:0;pointer-events:none;z-index:7;mix-blend-mode:screen}
+.lock-warp-chroma.chroma-a{background:radial-gradient(circle at 50% 50%,rgba(61,139,255,.5),transparent 62%)}
+.lock-warp-chroma.chroma-b{background:radial-gradient(circle at 50% 50%,rgba(232,184,109,.45),transparent 62%)}
+.lock-warp-flash{position:fixed;inset:0;opacity:0;pointer-events:none;z-index:8;background:radial-gradient(circle at 50% 50%,rgba(255,250,236,.98),rgba(140,200,255,.55) 42%,rgba(0,80,255,.18) 62%,transparent 78%)}
+
+.lock-access.entering{pointer-events:none;animation:lockGateOut 1.3s ease forwards}
+@keyframes lockGateOut{0%,62%{opacity:1}100%{opacity:0}}
 /* the card carries an !important transform, which outranks keyframes —
    so the fly-through is a transition between two !important states */
 .lock-access.entering .lock-access-card{
-  transform:translate3d(0,var(--lock-card-y),0) translateZ(760px) rotateX(9deg) scale(1.42)!important;
-  opacity:0;filter:blur(16px);
-  transition:transform .92s cubic-bezier(.72,.02,.9,.44),opacity .88s ease .08s,filter .9s ease;
+  transform:translate3d(0,var(--lock-card-y),0) translateZ(1500px) rotateX(16deg) scale(1.6)!important;
+  opacity:0;filter:blur(22px);
+  transition:transform 1.05s cubic-bezier(.7,.01,.85,.4),opacity .9s ease .15s,filter 1s ease;
 }
-.lock-access.entering .lock-warp i{animation:lockTunnel .95s cubic-bezier(.52,0,.82,.42) forwards}
-.lock-access.entering .lock-warp i:nth-child(1){animation-delay:.04s}
-.lock-access.entering .lock-warp i:nth-child(2){animation-delay:.13s}
-.lock-access.entering .lock-warp i:nth-child(3){animation-delay:.22s}
-.lock-access.entering .lock-warp i:nth-child(4){animation-delay:.31s}
-.lock-access.entering .lock-warp i:nth-child(5){animation-delay:.4s}
-@keyframes lockTunnel{0%{transform:scale(.1) translateZ(-300px);opacity:0}22%{opacity:1}100%{transform:scale(8.5) translateZ(260px);opacity:0}}
-.lock-access.entering .lock-warp-burst{animation:lockBurst 1s cubic-bezier(.6,0,.9,.5) .08s forwards}
-@keyframes lockBurst{0%{transform:scale(.04) rotate(0deg);opacity:0}30%{opacity:.9}100%{transform:scale(1.3) rotate(55deg);opacity:0}}
-.lock-access.entering .lock-warp-flash{animation:lockFlash .52s ease-out .6s forwards}
-@keyframes lockFlash{0%{opacity:0}38%{opacity:.95}100%{opacity:0}}
-.lock-access.entering .lock-access-mesh,.lock-access.entering .lock-access-rings{animation:lockBgRush .9s ease-in forwards}
-@keyframes lockBgRush{to{transform:scale(1.75);opacity:0;filter:blur(12px)}}
-.lock-access.entering .lock-holo-object,.lock-access.entering .floating-seo-tag{animation:lockScatter .72s cubic-bezier(.55,0,.85,.4) forwards!important}
-@keyframes lockScatter{to{transform:scale(2.6) translateY(-36px);opacity:0;filter:blur(9px)}}
-.lock-access.entering .lock-enter-btn{transform:scale(.92);opacity:.35;transition:transform .5s ease,opacity .5s ease}
-@media(prefers-reduced-motion:reduce){.lock-warp,.lock-warp-flash{display:none}.lock-access.entering .lock-access-card{transition:opacity .4s ease;transform:translate3d(0,var(--lock-card-y),0)!important;filter:none}.lock-access.entering .lock-holo-object,.lock-access.entering .floating-seo-tag{animation:none!important}}
+.lock-access.entering .lock-warp{animation:lockShake .5s linear .55s}
+@keyframes lockShake{0%,100%{transform:translate(0,0)}20%{transform:translate(-7px,5px)}40%{transform:translate(6px,-6px)}60%{transform:translate(-5px,-4px)}80%{transform:translate(5px,6px)}}
+.lock-access.entering .lock-warp i{animation:lockTunnel 1.05s cubic-bezier(.5,0,.82,.4) forwards}
+.lock-access.entering .lock-warp i:nth-of-type(1){animation-delay:0s}
+.lock-access.entering .lock-warp i:nth-of-type(2){animation-delay:.09s}
+.lock-access.entering .lock-warp i:nth-of-type(3){animation-delay:.18s}
+.lock-access.entering .lock-warp i:nth-of-type(4){animation-delay:.27s}
+.lock-access.entering .lock-warp i:nth-of-type(5){animation-delay:.36s}
+.lock-access.entering .lock-warp i:nth-of-type(6){animation-delay:.45s}
+.lock-access.entering .lock-warp i:nth-of-type(7){animation-delay:.54s}
+.lock-access.entering .lock-warp i:nth-of-type(8){animation-delay:.63s}
+@keyframes lockTunnel{0%{transform:scale(.06) translateZ(-420px);opacity:0}18%{opacity:1}100%{transform:scale(11) translateZ(320px);opacity:0}}
+.lock-access.entering .lock-warp-stars{animation:lockStarRush 1.15s cubic-bezier(.55,0,.85,.35) forwards}
+.lock-access.entering .lock-warp-stars.s2{animation-delay:.14s}
+.lock-access.entering .lock-warp-stars.s3{animation-delay:.28s}
+@keyframes lockStarRush{0%{transform:scale(.18) rotate(0deg);opacity:0}22%{opacity:1}100%{transform:scale(3.4) rotate(14deg);opacity:0}}
+.lock-access.entering .lock-warp-burst{animation:lockBurst 1.15s cubic-bezier(.58,0,.88,.45) .05s forwards}
+@keyframes lockBurst{0%{transform:scale(.03) rotate(0deg);opacity:0}26%{opacity:1}100%{transform:scale(1.45) rotate(70deg);opacity:0}}
+.lock-access.entering .lock-warp-chroma.chroma-a{animation:lockChromaA .55s ease-out .5s forwards}
+.lock-access.entering .lock-warp-chroma.chroma-b{animation:lockChromaB .55s ease-out .52s forwards}
+@keyframes lockChromaA{0%{opacity:0;transform:translate(0,0) scale(.85)}35%{opacity:.85;transform:translate(-14px,-6px) scale(1.05)}100%{opacity:0;transform:translate(-30px,-12px) scale(1.2)}}
+@keyframes lockChromaB{0%{opacity:0;transform:translate(0,0) scale(.85)}35%{opacity:.8;transform:translate(14px,8px) scale(1.05)}100%{opacity:0;transform:translate(30px,14px) scale(1.2)}}
+.lock-access.entering .lock-warp-flash{animation:lockFlash .6s ease-out .62s forwards}
+@keyframes lockFlash{0%{opacity:0}34%{opacity:1}100%{opacity:0}}
+.lock-access.entering .lock-access-mesh,.lock-access.entering .lock-access-rings{animation:lockBgRush 1s ease-in forwards}
+@keyframes lockBgRush{to{transform:scale(1.9);opacity:0;filter:blur(14px)}}
+.lock-access.entering .lock-holo-object,.lock-access.entering .floating-seo-tag{animation:lockScatter .7s cubic-bezier(.55,0,.85,.4) forwards!important}
+@keyframes lockScatter{to{transform:scale(2.8) translateY(-44px);opacity:0;filter:blur(10px)}}
+.lock-access.entering .lock-enter-btn{transform:scale(.9);opacity:.3;transition:transform .45s ease,opacity .45s ease}
+@media(prefers-reduced-motion:reduce){.lock-warp,.lock-warp-flash,.lock-warp-chroma{display:none}.lock-access.entering{animation:lockGateOut .6s ease forwards}.lock-access.entering .lock-access-card{transition:opacity .4s ease;transform:translate3d(0,var(--lock-card-y),0)!important;filter:none}.lock-access.entering .lock-holo-object,.lock-access.entering .floating-seo-tag{animation:none!important}}
 @media(max-width:640px){.lock-enter-btn{width:min(170px,58vw)}}
 
 /* ── hero: holographic crest + drifting keyword tags ── */
 .hero-crest{position:absolute;left:50%;top:47%;width:clamp(280px,42vw,540px);transform:translate(-50%,-50%);opacity:.13;pointer-events:none;z-index:1;filter:drop-shadow(0 0 70px rgba(61,139,255,.5));animation:heroCrestFloat 9s ease-in-out infinite}
 .hero-crest img{width:100%;height:auto;display:block}
 @keyframes heroCrestFloat{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.11}50%{transform:translate(-50%,-52.5%) scale(1.04);opacity:.17}}
-.hero .floating-seo-tags{position:absolute;inset:0;z-index:1;pointer-events:none}
-@media(max-width:760px){.hero-crest{width:74vw;opacity:.09}}
+/* tags keep floating but never sit over content: a large center
+   exclusion mask pins them to the page edges (important beats the
+   global mask reset at the top of this sheet) */
+.hero .floating-seo-tags{position:absolute;inset:0;z-index:0!important;pointer-events:none;opacity:.55!important;mask-image:radial-gradient(ellipse 58% 60% at 50% 47%,transparent 0 57%,black 76%)!important;-webkit-mask-image:radial-gradient(ellipse 58% 60% at 50% 47%,transparent 0 57%,black 76%)!important}
+.lock-access .floating-seo-tags{opacity:.85!important;mask-image:radial-gradient(ellipse 54% 62% at 50% 54%,transparent 0 54%,black 72%)!important;-webkit-mask-image:radial-gradient(ellipse 54% 62% at 50% 54%,transparent 0 54%,black 72%)!important}
+@media(max-width:760px){.hero-crest{width:74vw;opacity:.09}.hero .floating-seo-tags{opacity:.3!important}}
 `;
 
 /* ═══════════════════════════════════════════════════════
