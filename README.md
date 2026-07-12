@@ -50,7 +50,7 @@ npm run build    # production build → dist/
 App.jsx                    # home page, portals, router, global styles
 CurrentMun.jsx             # MAXMUN 3.0 cinematic page
 src/components/GoatedFX.jsx# global cinematic FX engine
-src/components/            # shared UI (matrix preview, lock access, forms)
+src/components/            # cinematic entry, matrix preview, shared forms
 src/data/                  # committees, editions, site data
 src/config/                # registration/matrix links
 ```
@@ -58,3 +58,7 @@ src/config/                # registration/matrix links
 ---
 
 Crafted by the MAXMUN 3.0 IT Team.
+
+## Media Credit
+
+The cinematic entry uses an edited excerpt from “Secretary Blinken meets with League of Arab States and Organization of Islamic Cooperation delegation,” an official U.S. Department of State work released into the public domain. Source: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Secretary_Blinken_meets_with_League_of_Arab_States_and_Organization_of_Islamic_Cooperation_delgation.webm). The footage is used as archival diplomatic imagery and does not imply endorsement.

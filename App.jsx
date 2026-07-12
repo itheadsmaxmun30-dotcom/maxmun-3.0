@@ -1,7 +1,7 @@
 ﻿import React from "react";
 import { useState, useEffect, useRef, useCallback } from "react";
 import CurrentMunPage from "./CurrentMun.jsx";
-import LockAccess from "./src/components/LockAccess.jsx";
+import MunRoomIntro from "./src/components/MunRoomIntro.jsx";
 import FloatingSEOTags from "./src/components/FloatingSEOTags.jsx";
 import GoatedFX from "./src/components/GoatedFX.jsx";
 import { forceScrollTop, smoothScrollToId } from "./src/utils/smoothScroll.js";
@@ -10,7 +10,7 @@ import { forceScrollTop, smoothScrollToId } from "./src/utils/smoothScroll.js";
    GLOBAL STYLES — MAXMUN PREMIUM CINEMATIC UI
 ═══════════════════════════════════════════════════════════ */
 const STYLES = `
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Space+Grotesk:wght@300;400;500;600;700&family=Bebas+Neue&family=Syncopate:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Syne:wght@400..800&family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Syncopate:wght@400;700&display=swap');
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -38,11 +38,14 @@ const STYLES = `
   --shadow-deep:0 32px 80px rgba(0,0,0,0.7);
   --glow-azure:0 0 60px rgba(0,80,255,0.3);
   --glow-gold:0 0 40px rgba(200,149,58,0.25);
+  --font-display:'Instrument Serif','Cormorant Garamond',serif;
+  --font-sans:'Syne','Space Grotesk',sans-serif;
+  --font-mono:'Space Mono',monospace;
 }
 
 html{scroll-behavior:smooth;font-size:16px}
 body{
-  font-family:'Space Grotesk',sans-serif;
+  font-family:var(--font-sans);
   background:var(--ink);
   color:var(--platinum);
   overflow-x:hidden;
@@ -51,7 +54,9 @@ body{
 ::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-track{background:var(--ink)}
 ::-webkit-scrollbar-thumb{background:linear-gradient(var(--azure),var(--gold));border-radius:2px}
-button{cursor:pointer;font-family:'Space Grotesk',sans-serif}
+button,input,select,textarea{font-family:var(--font-sans)}
+button{cursor:pointer}
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 
 .main-cursor-layer{
   position:fixed;inset:0;z-index:580;pointer-events:none;mix-blend-mode:screen;
@@ -252,7 +257,7 @@ body.cm-cinematic-scroll .home-section-rail{
 .hero-overline-line-r{width:32px;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
 .hero-title-wrap{animation:riseIn .9s .1s ease both}
 .hero-title{
-  font-family:'Cormorant Garamond',serif;
+  font-family:var(--font-display);
   font-size:clamp(5rem,16vw,14rem);
   font-weight:300;line-height:.85;
   color:var(--platinum);letter-spacing:-3px;
@@ -260,6 +265,7 @@ body.cm-cinematic-scroll .home-section-rail{
 }
 .hero-title-accent{
   font-style:italic;
+  padding-right:.14em;margin-right:-.14em;
   background:linear-gradient(135deg,var(--sky) 0%,var(--azure3) 40%,var(--gold2) 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
@@ -432,32 +438,56 @@ body.cm-cinematic-scroll .home-section-rail{
   transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;
   letter-spacing:-5px;
 }
-.countdown-inner{max-width:900px;margin:0 auto;text-align:center;position:relative;z-index:2}
+.countdown-inner{max-width:1040px;margin:0 auto;text-align:center;position:relative;z-index:2}
 .countdown-label{
-  font-family:'Syncopate',sans-serif;font-size:.65rem;font-weight:700;
-  letter-spacing:5px;text-transform:uppercase;color:var(--gold2);
-  margin-bottom:2.5rem;
+  font-family:var(--font-mono);font-size:.65rem;font-weight:700;
+  letter-spacing:6px;text-transform:uppercase;color:var(--gold2);
+  margin-bottom:3rem;
 }
-.countdown-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;max-width:700px;margin:0 auto 2.5rem}
+.countdown-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(.7rem,2vw,1.5rem);max-width:880px;margin:0 auto 2.5rem}
 .cdown-unit{
-  background:var(--ghost);border:1px solid var(--glassborder);
-  border-radius:var(--r12);padding:1.5rem 1rem;
-  backdrop-filter:blur(12px);position:relative;overflow:hidden;
+  position:relative;min-width:0;
 }
 .cdown-unit::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--azure3),transparent);
+  content:'';position:absolute;z-index:8;top:calc(50% - .68rem);left:-4px;width:8px;height:1.35rem;
+  border-radius:3px;background:linear-gradient(#23334a,#7a94b4 50%,#182537 52%);
 }
-.cdown-num{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(2.5rem,6vw,4rem);font-weight:600;
-  color:var(--platinum);line-height:1;
+.cdown-unit::after{content:'';position:absolute;z-index:8;top:calc(50% - .68rem);right:-4px;width:8px;height:1.35rem;border-radius:3px;background:linear-gradient(#23334a,#7a94b4 50%,#182537 52%)}
+.flip-card{
+  position:relative;isolation:isolate;height:clamp(7.3rem,13vw,10rem);perspective:700px;
+  border:1px solid rgba(120,193,255,.20);border-radius:14px;overflow:hidden;
+  background:#080f1b;box-shadow:0 24px 70px rgba(0,0,0,.42),inset 0 0 34px rgba(120,193,255,.035);
+}
+.flip-card::before{
+  content:'';position:absolute;z-index:9;left:0;right:0;top:50%;height:1px;
+  background:#000;box-shadow:0 -1px 0 rgba(255,255,255,.08),0 1px 5px rgba(0,0,0,.9);
+}
+.flip-card::after{
+  content:'';position:absolute;z-index:10;inset:0;pointer-events:none;
+  background:linear-gradient(120deg,transparent 18%,rgba(255,255,255,.055) 42%,transparent 58%),radial-gradient(circle at 50% 10%,rgba(61,139,255,.10),transparent 42%);
+}
+.flip-card__face,.flip-card__fold{
+  position:absolute;inset:0;display:grid;place-items:center;
+  background:linear-gradient(180deg,#111b2a 0%,#0b1421 49.5%,#080f19 50.5%,#0d1724 100%);
+  color:#f3f6fb;font-family:var(--font-display);font-size:clamp(3.5rem,8vw,6.5rem);
+  font-variant-numeric:tabular-nums;line-height:1;text-shadow:0 8px 24px rgba(0,0,0,.62),0 0 30px rgba(120,193,255,.09);
+}
+.flip-card__top{clip-path:inset(0 0 50% 0)}
+.flip-card__bottom{clip-path:inset(50% 0 0 0);filter:brightness(.88)}
+.flip-card__fold{
+  z-index:7;clip-path:inset(0 0 50% 0);transform-origin:50% 50%;backface-visibility:hidden;
+  animation:flipCardFold .72s cubic-bezier(.44,.05,.38,1) both;
+}
+@keyframes flipCardFold{
+  0%{transform:rotateX(0deg);filter:brightness(1.12)}
+  48%{transform:rotateX(-90deg);filter:brightness(.68)}
+  100%{transform:rotateX(-180deg);filter:brightness(.88)}
 }
 .cdown-sep{
   font-family:'Cormorant Garamond',serif;font-size:2rem;
   color:var(--dim);display:flex;align-items:center;padding-top:1.2rem;
 }
-.cdown-u{font-size:.58rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--dim);margin-top:4px}
+.cdown-u{font-family:var(--font-mono);font-size:.58rem;letter-spacing:3px;text-transform:uppercase;color:#6f88a8;margin-top:.85rem}
 .countdown-info{
   display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;margin-top:2rem;
 }
@@ -1034,7 +1064,7 @@ footer{
 .entry-lock-icon{font-size:2.8rem;margin-bottom:1rem;filter:drop-shadow(0 0 24px rgba(120,193,255,.4))}
 .entry-lock-kicker{font-size:.72rem;letter-spacing:.38em;text-transform:uppercase;color:var(--gold2);font-weight:800;margin-bottom:1rem}
 .entry-lock-title{font-family:'Cormorant Garamond',serif;font-size:clamp(4rem,13vw,9rem);font-weight:300;line-height:.82;letter-spacing:-.06em;color:var(--platinum);margin-bottom:1rem}
-.entry-lock-title span{font-style:italic;background:linear-gradient(90deg,var(--ice),var(--azure3) 45%,var(--gold3));-webkit-background-clip:text;background-clip:text;color:transparent}
+.entry-lock-title span{font-style:italic;padding-right:.14em;margin-right:-.14em;background:linear-gradient(90deg,var(--ice),var(--azure3) 45%,var(--gold3));-webkit-background-clip:text;background-clip:text;color:transparent}
 .entry-lock-text{max-width:680px;margin:0 auto 2.3rem;color:var(--silver);line-height:1.8;font-size:clamp(.95rem,1.6vw,1.08rem)}
 .entry-lock-actions{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;max-width:760px;margin:0 auto}
 .entry-choice{position:relative;overflow:hidden;border-radius:20px;border:1px solid rgba(255,255,255,.10);padding:1.45rem 1.2rem;background:rgba(255,255,255,.045);color:var(--platinum);text-align:left;transition:.25s;min-height:130px}
@@ -1327,7 +1357,8 @@ button,a,.cc,.edition-card,.feat,.oc-card,.entry-choice,.cinfo,.ltab,.eb-chip{tr
   text-shadow:0 18px 70px rgba(0,0,0,.68),0 0 35px rgba(120,193,255,.16);
 }
 .lock-title span{
-  font-style:italic;background:linear-gradient(90deg,#eaf7ff,#78c1ff 36%,#d83cff 62%,#f5d49a);
+  font-style:italic;padding-right:.14em;margin-right:-.14em;
+  background:linear-gradient(90deg,#eaf7ff,#78c1ff 36%,#d83cff 62%,#f5d49a);
   -webkit-background-clip:text;background-clip:text;color:transparent;
 }
 .lock-text{
@@ -1531,6 +1562,7 @@ button,a,.cc,.edition-card,.feat,.oc-card,.entry-choice,.cinfo,.ltab,.eb-chip{tr
 }
 .lock-edition-mark strong{
   font-family:'Cormorant Garamond',serif;font-size:clamp(1rem,1.8vw,1.42rem);font-style:italic;font-weight:700;letter-spacing:.02em;
+  padding-right:.14em;margin-right:-.14em;
   background:linear-gradient(90deg,#fff,#f5d49a 44%,#78c1ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
 }
 .lock-edition-mark em{
@@ -2192,18 +2224,32 @@ section{content-visibility:visible!important;contain-intrinsic-size:auto!importa
 @media(max-width:640px){.lock-enter-btn{width:min(170px,58vw)}}
 
 /* ── hero: holographic crest + drifting keyword tags ── */
-/* crisp holo-crest: full opacity image, sharpness preserved (the old
-   ultra-low opacity + 70px glow read as "blurry"); a radial fade mask
-   keeps it from fighting the title */
-.hero-crest{position:absolute;left:50%;top:46%;width:clamp(230px,26vw,420px);transform:translate(-50%,-50%);opacity:.3;pointer-events:none;z-index:1;filter:saturate(1.15) contrast(1.06) drop-shadow(0 0 26px rgba(61,139,255,.35));animation:heroCrestFloat 9s ease-in-out infinite;mask-image:radial-gradient(circle at 50% 50%,black 0 58%,transparent 88%);-webkit-mask-image:radial-gradient(circle at 50% 50%,black 0 58%,transparent 88%)}
-.hero-crest img{width:100%;height:auto;display:block}
-@keyframes heroCrestFloat{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.26}50%{transform:translate(-50%,-52%) scale(1.03);opacity:.34}}
+/* hero command seal: crisp crest, calibrated orbitals and depth lighting */
+.hero-crest{position:absolute;left:50%;top:46%;width:clamp(380px,44vw,680px);aspect-ratio:1;display:grid;place-items:center;transform:translate(-50%,-50%);pointer-events:none;z-index:1;isolation:isolate;animation:heroCrestFloat 10s ease-in-out infinite}
+.hero-crest__halo{position:absolute;inset:5%;border-radius:50%;background:radial-gradient(circle,rgba(120,193,255,.24) 0 8%,rgba(0,80,255,.10) 32%,rgba(232,184,109,.06) 49%,transparent 70%);filter:blur(12px);box-shadow:0 0 100px rgba(0,80,255,.14),inset 0 0 70px rgba(120,193,255,.08)}
+.hero-crest__orbit{position:absolute;border-radius:50%;border:1px solid rgba(120,193,255,.22);box-shadow:inset 0 0 35px rgba(120,193,255,.04),0 0 28px rgba(0,80,255,.08)}
+.hero-crest__orbit::before,.hero-crest__orbit::after{content:'';position:absolute;border-radius:50%;background:linear-gradient(135deg,var(--sky),var(--gold2));box-shadow:0 0 18px rgba(120,193,255,.7)}
+.hero-crest__orbit--outer{inset:1%;border-style:dashed;animation:heroOrbit 24s linear infinite}
+.hero-crest__orbit--outer::before{top:-4px;left:50%;width:8px;height:8px}.hero-crest__orbit--outer::after{right:9%;bottom:14%;width:5px;height:5px}
+.hero-crest__orbit--inner{inset:16%;border-color:rgba(232,184,109,.25);animation:heroOrbitReverse 17s linear infinite}
+.hero-crest__orbit--inner::before{left:-3px;top:50%;width:6px;height:6px}.hero-crest__orbit--inner::after{top:8%;right:18%;width:4px;height:4px}
+.hero-crest img{position:relative;z-index:2;width:64%;height:64%;display:block;object-fit:contain;opacity:.42;filter:saturate(1.24) contrast(1.16) brightness(.98) drop-shadow(0 0 18px rgba(120,193,255,.22));mix-blend-mode:screen;mask-image:radial-gradient(circle,black 0 64%,transparent 88%);-webkit-mask-image:radial-gradient(circle,black 0 64%,transparent 88%)}
+.hero-crest__axis{position:absolute;z-index:1;background:linear-gradient(90deg,transparent,rgba(120,193,255,.22),rgba(232,184,109,.18),transparent)}
+.hero-crest__axis--x{left:-12%;right:-12%;height:1px}.hero-crest__axis--y{top:-12%;bottom:-12%;width:1px;background:linear-gradient(transparent,rgba(120,193,255,.22),rgba(232,184,109,.18),transparent)}
+.hero-crest__code{position:absolute;right:4%;bottom:18%;font:700 .48rem/1 var(--font-mono);letter-spacing:.22em;color:rgba(120,193,255,.48);transform:rotate(-28deg)}
+@keyframes heroCrestFloat{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-52%) scale(1.025)}}
+@keyframes heroOrbit{to{transform:rotate(360deg)}}
+@keyframes heroOrbitReverse{to{transform:rotate(-360deg)}}
 /* tags keep floating but never sit over content: a large center
    exclusion mask pins them to the page edges (important beats the
    global mask reset at the top of this sheet) */
 .hero .floating-seo-tags{position:absolute;inset:0;z-index:0!important;pointer-events:none;opacity:.5!important;mask-image:linear-gradient(90deg,black 0 24%,transparent 31% 69%,black 76% 100%)!important;-webkit-mask-image:linear-gradient(90deg,black 0 24%,transparent 31% 69%,black 76% 100%)!important}
 .lock-access .floating-seo-tags{opacity:.85!important;mask-image:radial-gradient(ellipse 54% 62% at 50% 54%,transparent 0 54%,black 72%)!important;-webkit-mask-image:radial-gradient(ellipse 54% 62% at 50% 54%,transparent 0 54%,black 72%)!important}
-@media(max-width:760px){.hero-crest{width:74vw;opacity:.09}.hero .floating-seo-tags{opacity:.3!important}}
+@media(max-width:760px){.hero-crest{width:94vw;top:43%}.hero-crest img{opacity:.26;width:68%;height:68%}.hero-crest__code{display:none}.hero .floating-seo-tags{opacity:.3!important}}
+
+/* typography system: expressive editorial display + geometric interface text */
+.section-h,.hero-title,.metric-num,.countdown-bg-text,.ed-num,.cc-abbr,.stat-val,.quote-text,.portal-title,.success-title,.dash-greeting-name,.adm-ph-title,.adm-stat-num{font-family:var(--font-display)!important}
+.nav-brand,.nav-links,.hero-edition,.section-label,.countdown-label,.gcard-t,.ed-name,.metric-label,.cdown-u,.footer-brand{font-family:var(--font-mono)!important}
 `;
 
 /* ═══════════════════════════════════════════════════════
@@ -2602,6 +2648,21 @@ function useCountdown(targetDate) {
   return t;
 }
 
+function FlipClockUnit({ label, value }) {
+  const display = String(value).padStart(2, "0");
+  return (
+    <div className="cdown-unit">
+      <span className="sr-only">{display} {label}</span>
+      <div className="flip-card" aria-hidden="true">
+        <span className="flip-card__face flip-card__top">{display}</span>
+        <span className="flip-card__face flip-card__bottom">{display}</span>
+        <span className="flip-card__fold" key={display}>{display}</span>
+      </div>
+      <div className="cdown-u">{label}</div>
+    </div>
+  );
+}
+
 function CommitteeCard({ c, onClick }) {
   const theme = COMMITTEE_THEME_MAP[c.abbr] || "unga";
   const cardRef = useRef(null);
@@ -2921,7 +2982,7 @@ function AntiGravityField({ active = true }) {
   return null;
 }
 
-function MaxMUNHome({ onNavigateToRegister, onNavigateToAdmin, onNavigateToCurrentMun }) {
+function MaxMUNHome({ introActive = false, onNavigateToRegister, onNavigateToAdmin, onNavigateToCurrentMun }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeCommitteeTab, setActiveCommitteeTab] = useState("1.0");
@@ -2930,7 +2991,6 @@ function MaxMUNHome({ onNavigateToRegister, onNavigateToAdmin, onNavigateToCurre
   const [expandedOC, setExpandedOC] = useState(null);
   const [showRegister, setShowRegister] = useState(false);
   const [toast, setToast] = useState("");
-  const [gatewayOpen, setGatewayOpen] = useState(() => window.location.hash !== "#admin");
   const [activeSection, setActiveSection] = useState("hero");
   const activeSectionRef = useRef("hero");
   const cd = useCountdown("2026-07-31T09:00:00");
@@ -2940,7 +3000,7 @@ function MaxMUNHome({ onNavigateToRegister, onNavigateToAdmin, onNavigateToCurre
   useEffect(() => { const fn = () => setScrolled(window.scrollY > 40); window.addEventListener("scroll", fn); return () => window.removeEventListener("scroll", fn); }, []);
 
   useEffect(() => {
-    if (gatewayOpen) return undefined;
+    if (introActive) return undefined;
     let raf = 0;
     const updateActive = () => {
       raf = 0;
@@ -2973,19 +3033,10 @@ function MaxMUNHome({ onNavigateToRegister, onNavigateToAdmin, onNavigateToCurre
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, [gatewayOpen]);
+  }, [introActive]);
 
   const go = id => { smoothScrollToId(id); setMenuOpen(false); };
   const showToast = msg => { setToast(msg); setTimeout(() => setToast(""), 4000); };
-  const openPreviousVersions = () => {
-    setGatewayOpen(false);
-    requestAnimationFrame(forceScrollTop);
-  };
-  const openCurrentMun = () => {
-    setGatewayOpen(false);
-    forceScrollTop();
-    onNavigateToCurrentMun?.();
-  };
 
   const mm1 = ALL_COMMITTEES.filter(c => c.edition === "MaxMUN 1.0");
   const mm2 = ALL_COMMITTEES.filter(c => c.edition === "MaxMUN 2.0");
@@ -2993,11 +3044,10 @@ function MaxMUNHome({ onNavigateToRegister, onNavigateToAdmin, onNavigateToCurre
   return (
     <>
       <style>{STYLES}</style>
-      {!gatewayOpen && <FXCanvas />}
-      <HomeCursorLayer active />
-      {!gatewayOpen && <HomeSectionRail active={!gatewayOpen} activeSection={activeSection} onJump={go} />}
+      <FXCanvas />
+      <HomeCursorLayer active={!introActive} />
+      {!introActive && <HomeSectionRail active={!introActive} activeSection={activeSection} onJump={go} />}
       <div className="noise-layer" />
-      {gatewayOpen && <LockAccess onPrevious={openPreviousVersions} onCurrent={openCurrentMun} />}
 
       <nav className={`nav${scrolled ? " solid":""}`}>
         <div className="nav-brand" onClick={() => go("hero")}><div className="nav-brand-dot" />MAXMUN<span className="nav-badge">3.0</span></div>
@@ -3030,7 +3080,15 @@ function MaxMUNHome({ onNavigateToRegister, onNavigateToAdmin, onNavigateToCurre
           </svg>
         </div>
         <FloatingSEOTags />
-        <div className="hero-crest" aria-hidden="true"><img src="/maxmun-crest-centered.png" alt="" /></div>
+        <div className="hero-crest" aria-hidden="true">
+          <span className="hero-crest__halo" />
+          <span className="hero-crest__orbit hero-crest__orbit--outer" />
+          <span className="hero-crest__orbit hero-crest__orbit--inner" />
+          <img src="/maxmun-crest-centered.png" alt="" />
+          <span className="hero-crest__axis hero-crest__axis--x" />
+          <span className="hero-crest__axis hero-crest__axis--y" />
+          <span className="hero-crest__code">MM / 03 · DELHI</span>
+        </div>
         <div className="hero-content">
           <div className="hero-overline"><div className="hero-overline-line" />Maxfort School Dwarka · New Delhi · India<div className="hero-overline-line-r" /></div>
           <div className="hero-title-wrap"><h1 className="hero-title">MAX<span className="hero-title-accent">MUN</span></h1></div>
@@ -3066,7 +3124,7 @@ function MaxMUNHome({ onNavigateToRegister, onNavigateToAdmin, onNavigateToCurre
         <div className="countdown-bg-text">3.0</div>
         <div className="countdown-inner sr">
           <div className="countdown-label">MaxMUN 3.0 Countdown</div>
-          <div className="countdown-grid">{[["Days", cd.d], ["Hours", cd.h], ["Minutes", cd.m], ["Seconds", cd.s]].map(([u, n]) => (<div className="cdown-unit" key={u}><div className="cdown-num">{String(n).padStart(2, "0")}</div><div className="cdown-u">{u}</div></div>))}</div>
+          <div className="countdown-grid">{[["Days", cd.d], ["Hours", cd.h], ["Minutes", cd.m], ["Seconds", cd.s]].map(([u, n]) => <FlipClockUnit label={u} value={n} key={u} />)}</div>
           <div style={{ fontSize:".78rem", color:"var(--silver)", marginBottom:"1.5rem" }}>Until Senior Conference · 31 July 2026</div>
           <div className="countdown-info"><div className="cdown-conf"><span>Senior Conference</span> · Classes 6–12 · 31 July 2026</div><div className="cdown-conf"><span>Junior Conference</span> · Classes 2–5 · 17 July 2026</div></div>
         </div>
@@ -4437,6 +4495,16 @@ export default function App() {
   };
 
   const [page, setPage] = useState(getInitialPage);
+  const [introDone, setIntroDone] = useState(() => {
+    const h = window.location.hash.replace("#", "");
+    if (h === "admin" || h === "current-register") return true;
+    return new URLSearchParams(window.location.search).has("nointro");
+  });
+  const introActive = !introDone && (page === "home" || page === "current-mun");
+  const completeIntro = () => {
+    setIntroDone(true);
+    requestAnimationFrame(forceScrollTop);
+  };
 
   const navigate = (p) => {
     if (p === "current-register") {
@@ -4482,10 +4550,11 @@ export default function App() {
     <>
       <style>{STYLES}</style>
       <style>{PORTAL_STYLES}</style>
-      {page === "home" && <MaxMUNHome onNavigateToRegister={() => navigate("current-register")} onNavigateToAdmin={() => navigate("admin-login")} onNavigateToCurrentMun={() => navigate("current-mun")} />}
+      {page === "home" && <MaxMUNHome introActive={introActive} onNavigateToRegister={() => navigate("current-register")} onNavigateToAdmin={() => navigate("admin-login")} onNavigateToCurrentMun={() => navigate("current-mun")} />}
       {page === "current-mun" && <><HomeCursorLayer active /><div className="noise-layer" /><CurrentMunPage onBack={() => navigate("home")} /></>}
       {page === "admin-login" && <><FXCanvas /><div className="noise-layer" /><AdminLogin onNavigate={navigate} /></>}
       {page === "admin-dashboard" && <AdminDashboard onNavigate={navigate} />}
+      {introActive && <MunRoomIntro onComplete={completeIntro} />}
       <GoatedFX />
     </>
   );
