@@ -748,6 +748,30 @@ html.mun-warp-in #root {
 
 /* ── small screens ───────────────────────────────────────────── */
 @media (max-width: 760px) {
+  .mun-intro.is-film .mun-intro__void {
+    opacity: 1;
+    background:
+      radial-gradient(ellipse at 50% 50%, rgb(18 49 85 / 72%), transparent 48%),
+      linear-gradient(180deg, #01040a 0%, #071426 50%, #01040a 100%);
+    animation: munVoidPulse 3.2s ease-in-out infinite;
+  }
+
+  .mun-intro__film {
+    object-fit: contain;
+    object-position: 50% 50%;
+  }
+
+  .mun-intro.is-film .mun-intro__film {
+    animation: munKenFilmMobile 11.4s linear both;
+  }
+
+  .mun-intro__treatment {
+    background:
+      linear-gradient(180deg, rgb(1 4 10 / 78%) 0%, transparent 20% 80%, rgb(1 4 10 / 82%) 100%),
+      radial-gradient(ellipse at 50% 50%, transparent 0 48%, rgb(1 4 10 / 28%) 82%),
+      repeating-linear-gradient(0deg, transparent 0 5px, rgb(120 193 255 / 2%) 6px);
+  }
+
   .mun-intro__hud {
     grid-template-columns: auto 1fr;
   }
@@ -756,12 +780,35 @@ html.mun-warp-in #root {
     display: none;
   }
 
+  .mun-intro__word {
+    padding-inline: 1rem;
+  }
+
   .mun-intro__word strong {
-    font-size: clamp(2.1rem, 12vw, 3.4rem);
+    max-width: calc(100vw - 2rem);
+    font-size: clamp(1.9rem, 10vw, 2.9rem);
+    letter-spacing: 0.08em;
+    text-indent: 0.08em;
+    white-space: nowrap;
+  }
+
+  .mun-intro__word[data-w="diplomacy"] strong {
+    font-size: clamp(1.55rem, 8.5vw, 2.35rem);
+    letter-spacing: 0.055em;
+    text-indent: 0.055em;
+  }
+
+  .mun-intro__word small {
+    letter-spacing: 0.28em;
   }
 
   .mun-intro__source {
     display: none;
+  }
+
+  @keyframes munKenFilmMobile {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.012); }
   }
 }
 
