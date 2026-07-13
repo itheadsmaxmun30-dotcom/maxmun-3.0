@@ -812,6 +812,51 @@ html.mun-warp-in #root {
   }
 }
 
+/* ── large screens: the film plays as a floating cinema screen ─────
+   Phone parity, deliberately: contain instead of cover so the 1080p
+   master is never blown past its native size (cover on big monitors
+   turned the grade to mush), and the ambient room stays lit around
+   the frame. The end transition then reads exactly like the phone's:
+   the contained screen dives through the full-screen portal. */
+@media (min-width: 761px) {
+  .mun-intro.is-film .mun-intro__void {
+    opacity: 1;
+    background:
+      radial-gradient(ellipse 62% 56% at 50% 47%, rgb(24 60 104 / 58%), transparent 70%),
+      radial-gradient(ellipse 46% 30% at 50% 108%, rgb(232 184 109 / 9%), transparent 74%),
+      radial-gradient(circle at 50% -14%, rgb(120 193 255 / 10%), transparent 44%),
+      linear-gradient(180deg, #01040a 0%, #071426 50%, #01040a 100%);
+    animation: munVoidPulse 3.2s ease-in-out infinite;
+  }
+
+  /* margin:auto centering (not transform) so the ken/warp scale
+     keyframes keep their transform channel to themselves */
+  .mun-intro__film {
+    inset: 0;
+    width: min(78vw, 136vh);
+    height: auto;
+    aspect-ratio: 16 / 9;
+    margin: auto;
+    object-fit: contain;
+    object-position: 50% 50%;
+    border-radius: clamp(10px, 1vw, 16px);
+    box-shadow:
+      0 34px 110px rgb(0 0 0 / 62%),
+      0 10px 40px rgb(0 0 0 / 55%),
+      0 0 90px rgb(61 139 255 / 16%),
+      0 0 160px rgb(232 184 109 / 7%);
+  }
+
+  /* softer dressing — the heavy full-bleed letterbox bars were sized
+     for an edge-to-edge film, not a floating screen */
+  .mun-intro__treatment {
+    background:
+      linear-gradient(180deg, rgb(1 4 10 / 72%) 0%, transparent 16% 84%, rgb(1 4 10 / 78%) 100%),
+      radial-gradient(ellipse at 50% 50%, transparent 0 52%, rgb(1 4 10 / 30%) 88%),
+      repeating-linear-gradient(0deg, transparent 0 5px, rgb(120 193 255 / 2%) 6px);
+  }
+}
+
 /* NOTE: no prefers-reduced-motion override here on purpose — with Windows
    "animation effects" off, browsers report reduced motion and a previous
    override silently disabled every intro animation on this machine. */

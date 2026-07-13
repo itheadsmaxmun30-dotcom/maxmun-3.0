@@ -1052,7 +1052,7 @@ footer{
 .entry-motion-tag::before{content:"";width:6px;height:6px;border-radius:50%;background:linear-gradient(135deg,var(--gold2),var(--sky));box-shadow:0 0 14px rgba(120,193,255,.46)}
 .entry-motion-tag:nth-child(1){left:4%;top:10%;--dur:18s;--delay:-4s}.entry-motion-tag:nth-child(2){left:70%;top:10%;--dur:22s;--delay:-9s}.entry-motion-tag:nth-child(3){left:78%;top:25%;--dur:19s;--delay:-2s}.entry-motion-tag:nth-child(4){left:5%;top:31%;--dur:25s;--delay:-13s}.entry-motion-tag:nth-child(5){left:79%;top:44%;--dur:21s;--delay:-7s}.entry-motion-tag:nth-child(6){left:6%;top:53%;--dur:26s;--delay:-16s}.entry-motion-tag:nth-child(7){left:73%;top:62%;--dur:23s;--delay:-5s}.entry-motion-tag:nth-child(8){left:36%;top:7%;--dur:29s;--delay:-11s}.entry-motion-tag:nth-child(9){left:16%;top:84%;--dur:20s;--delay:-6s}.entry-motion-tag:nth-child(10){left:72%;top:83%;--dur:27s;--delay:-18s}.entry-motion-tag:nth-child(11){left:2%;top:72%;--dur:19s;--delay:-3s}.entry-motion-tag:nth-child(12){left:82%;top:73%;--dur:24s;--delay:-12s}.entry-motion-tag:nth-child(13){left:2%;top:18%;--dur:31s;--delay:-17s}.entry-motion-tag:nth-child(14){left:64%;top:18%;--dur:28s;--delay:-8s}.entry-motion-tag:nth-child(15){left:1%;top:44%;--dur:30s;--delay:-20s}.entry-motion-tag:nth-child(16){left:86%;top:34%;--dur:26s;--delay:-14s}.entry-motion-tag:nth-child(17){left:30%;top:88%;--dur:22s;--delay:-10s}.entry-motion-tag:nth-child(18){left:62%;top:91%;--dur:25s;--delay:-22s}.entry-motion-tag:nth-child(19){left:9%;top:62%;--dur:27s;--delay:-15s}.entry-motion-tag:nth-child(20){left:76%;top:55%;--dur:24s;--delay:-1s}
 @keyframes entryTagDrift{0%{transform:translate3d(-26px,12px,0) rotate(-5deg);opacity:.48}35%{opacity:.96}70%{opacity:.70}100%{transform:translate3d(48px,-30px,0) rotate(6deg);opacity:.86}}
-@media(max-width:760px),(prefers-reduced-motion:reduce){.entry-motion-tags{opacity:.28}.entry-motion-tag{animation:none!important;transform:none!important}.entry-motion-tag:nth-child(n+7){display:none}}
+@media(max-width:760px){.entry-motion-tags{opacity:.28}.entry-motion-tag{animation:none!important;transform:none!important}.entry-motion-tag:nth-child(n+7){display:none}}
 
 .entry-lock-card{
   position:relative;z-index:2;width:min(980px,100%);border:1px solid rgba(120,193,255,.18);
@@ -1098,7 +1098,6 @@ footer{
 button,a,.cc,.edition-card,.feat,.oc-card,.entry-choice,.cinfo,.ltab,.eb-chip{transform:translate3d(var(--ag-tx,0),var(--ag-ty,0),0) rotateX(var(--ag-rx,0)) rotateY(var(--ag-ry,0));transition:transform .18s ease,box-shadow .24s ease,border-color .24s ease,background .24s ease,color .24s ease}
 .entry-lock-logo{display:block;width:clamp(118px,18vw,190px);height:auto;margin:0 auto 1.25rem;object-fit:contain;filter:drop-shadow(0 0 24px rgba(120,193,255,.34)) drop-shadow(0 0 34px rgba(200,149,58,.20))}
 @media(max-width:760px){.ag-field{display:none!important}button,a,.cc,.edition-card,.feat,.oc-card,.entry-choice,.cinfo,.ltab,.eb-chip{transition:transform .24s cubic-bezier(.2,.8,.2,1),box-shadow .24s ease,border-color .24s ease,background .24s ease,color .24s ease}}
-@media(prefers-reduced-motion:reduce){.ag-field{display:none!important}button,a,.cc,.edition-card,.feat,.oc-card,.entry-choice,.cinfo,.ltab,.eb-chip{transform:none!important;transition:box-shadow .24s ease,border-color .24s ease,background .24s ease,color .24s ease}}
 
 /* buddy-inspired gradient texture merge */
 .hero-bg{
@@ -1416,10 +1415,6 @@ button,a,.cc,.edition-card,.feat,.oc-card,.entry-choice,.cinfo,.ltab,.eb-chip{tr
   .lock-choice{text-align:center;min-height:86px}
   .floating-seo-tag:nth-child(n+9){display:none}
 }
-@media(prefers-reduced-motion:reduce){
-  .lock-access::before,.lock-access::after,.lock-access-mesh,.lock-access-rings,.lock-access-card::before{animation:none!important}
-  .floating-seo-tag{animation:floatTag var(--duration) ease-in-out infinite both!important;animation-delay:var(--delay)!important;opacity:.22}
-}
 
 /* visual recovery pass: bigger crest, better type, real hover life, CSS-only holo objects */
 .lock-access{perspective:1200px}
@@ -1514,19 +1509,6 @@ button,a,.cc,.edition-card,.feat,.oc-card,.entry-choice,.cinfo,.ltab,.eb-chip{tr
   .lock-holo-object.cube.small,.lock-holo-object.prism,.lock-holo-object.shard{display:none}
   .lock-holo-object.orb{right:5%;top:12%;width:54px;height:54px}
   .lock-holo-object.ring{left:7%;bottom:8%;width:76px;height:76px}
-}
-@media(prefers-reduced-motion:reduce){
-  .lock-access::before{animation:lockMeshOrbit 32s ease-in-out infinite alternate!important}
-  .lock-access::after{animation:lockGridShift 26s linear infinite!important}
-  .lock-access-mesh{animation:lockMeshDrift 34s ease-in-out infinite alternate!important}
-  .lock-access-rings{animation:lockRingSpin 46s linear infinite!important}
-  .lock-access-card::before{animation:lockCardSweep 9s ease-in-out infinite!important}
-  .floating-seo-tag{animation:floatTag var(--duration) ease-in-out infinite both!important;opacity:.30}
-  .lock-holo-object.cube{animation:holoCubeFloat 14s ease-in-out infinite!important}
-  .lock-holo-object.orb{animation:holoOrbFloat 15s ease-in-out infinite!important}
-  .lock-holo-object.ring{animation:holoRingSpin 28s linear infinite!important}
-  .lock-holo-object.prism{animation:holoPrismFloat 16s ease-in-out infinite!important}
-  .lock-holo-object.shard{animation:holoShardSlide 13s ease-in-out infinite!important}
 }
 
 /* final lock performance + crest completion pass */
@@ -1757,10 +1739,6 @@ section{content-visibility:visible!important;contain-intrinsic-size:auto!importa
   .edition-card:focus-visible,.committee-card:focus-visible,.oc-card:focus-visible,.entry-choice:focus-visible,.lock-choice-current:focus-visible{
     transform:translate3d(0,-5px,0) scale(1.012)!important;
   }
-}
-@media(prefers-reduced-motion:reduce){
-  .fx-canvas,.hero-orb,.entry-motion-tags,.floating-seo-tag,.ag-field{display:none!important}
-  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
 }
 
 /* HARD EFFECT RESTORE: keep the entry experience alive on every normal viewport/settings combo */
@@ -2220,7 +2198,6 @@ section{content-visibility:visible!important;contain-intrinsic-size:auto!importa
 @keyframes lockScatter{to{transform:scale(2.8) translateY(-44px);opacity:0;filter:blur(10px)}}
 .lock-access.entering .lock-enter-btn{transform:scale(.9);opacity:.3;transition:transform .45s ease,opacity .45s ease}
 @keyframes lockGateFade{to{opacity:0}}
-@media(prefers-reduced-motion:reduce){.lock-warp,.lock-warp-flash,.lock-warp-chroma{display:none}.lock-access.entering{animation:lockGateFade .6s ease forwards}.lock-access.entering .lock-access-card{transition:opacity .4s ease;transform:translate3d(0,var(--lock-card-y),0)!important;filter:none}.lock-access.entering .lock-holo-object,.lock-access.entering .floating-seo-tag{animation:none!important}}
 @media(max-width:640px){.lock-enter-btn{width:min(170px,58vw)}}
 
 /* ── hero: holographic crest + drifting keyword tags ── */
@@ -2405,7 +2382,6 @@ function FXCanvas() {
     if (!c) return;
     const ctx = c.getContext("2d");
     let W, H, raf, t = 0, lastFrame = 0, running = true;
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const particles = [];
     const cubes = [];
     const spheres = [];
@@ -2423,9 +2399,9 @@ function FXCanvas() {
     resize();
     window.addEventListener("resize", resize);
 
-    const particleCount = reducedMotion ? 0 : window.innerWidth < 760 ? 16 : 32;
-    const cubeCount = reducedMotion ? 0 : window.innerWidth < 900 ? 0 : 1;
-    const sphereCount = reducedMotion ? 0 : window.innerWidth < 760 ? 1 : 2;
+    const particleCount = window.innerWidth < 760 ? 16 : 32;
+    const cubeCount = window.innerWidth < 900 ? 0 : 1;
+    const sphereCount = window.innerWidth < 760 ? 1 : 2;
 
     for (let i = 0; i < particleCount; i++) {
       particles.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .3, vy: (Math.random() - .5) * .3, r: Math.random() * 1.5 + .3, o: Math.random() * .4 + .1, c: Math.random() > .7 ? "#c8953a" : "#3d8bff" });
@@ -2463,7 +2439,7 @@ function FXCanvas() {
 
     const draw = (time = 0) => {
       if (!running) return;
-      const frameGap = reducedMotion ? 180 : W < 760 ? 110 : 70;
+      const frameGap = W < 760 ? 110 : 70;
       if (time - lastFrame < frameGap) { raf = requestAnimationFrame(draw); return; }
       lastFrame = time;
       ctx.clearRect(0, 0, W, H); t += .004;

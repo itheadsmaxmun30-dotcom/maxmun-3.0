@@ -3,8 +3,10 @@ import { useEffect, useRef } from "react";
 /* ═══════════════════════════════════════════════════════════
    GOATED FX ENGINE — global cinematic enhancement layer.
    Pure visuals: zero content changes, zero data changes.
-   Everything gates on prefers-reduced-motion and pointer type,
-   and every hook targets classes that already exist in the app.
+   Pointer-type gates only — NO prefers-reduced-motion gates:
+   Windows "animation effects off" makes browsers report reduced
+   motion, which silently blanked all of this on desktop while
+   phones got the full show. Desktop must match the phone.
 ═══════════════════════════════════════════════════════════ */
 
 const GFX_STYLES = `
@@ -43,7 +45,6 @@ html.gfx-on .gfx-spotlight{opacity:1}
 @keyframes gfxVeilFade{to{opacity:0}}
 @keyframes gfxVeilUp{to{transform:translateY(-103%)}}
 @keyframes gfxVeilDn{to{transform:translateY(103%)}}
-@media(prefers-reduced-motion:reduce){.gfx-veil,.gfx-aurora,.gfx-stars,.gfx-spotlight,.gfx-burst-layer{display:none!important}}
 
 /* ---- click spark bursts ---- */
 .gfx-burst-layer{position:fixed;inset:0;z-index:640;pointer-events:none;overflow:hidden}
@@ -127,10 +128,8 @@ export default function GoatedFX() {
 
   /* ── DOM engine: reveals, parallax, magnetism, sparks, progress ── */
   useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const fine = window.matchMedia("(pointer: fine)").matches;
     const root = document.documentElement;
-    if (reduced) return undefined;
     root.classList.add("gfx-on", "gfx-armed");
     if (fine) root.classList.add("gfx-fine");
 
@@ -377,7 +376,7 @@ export default function GoatedFX() {
   /* ── starfield canvas: twinkle, constellations, meteors, scroll warp ── */
   useEffect(() => {
     const c = starsRef.current;
-    if (!c || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+    if (!c) return undefined;
     const ctx = c.getContext("2d");
     const fine = window.matchMedia("(pointer: fine)").matches;
     let W = 0, H = 0, raf = 0, running = true, lastFrame = 0;

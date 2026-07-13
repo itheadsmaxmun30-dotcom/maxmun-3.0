@@ -88,8 +88,7 @@ body::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#1d4ed8,#38bdf8,
 @media(max-width:980px){.cm-nav.cm-nav-pill{border-radius:26px;align-items:flex-start;gap:.7rem}.cm-links{overflow-x:auto;justify-content:flex-end;max-width:100%;padding-bottom:.2rem}.cm-links button:not(.cm-back){padding:.72rem .75rem}.cm-committee-console{grid-template-columns:1fr}.cm-committee-nav{grid-template-columns:repeat(4,1fr)}.cm-committee-spotlight{grid-template-columns:1fr}.cm-spotlight-code{min-width:0}.cm-hero{padding-top:11rem}}
 @media(max-width:560px){.cm-nav.cm-nav-pill{position:absolute;border-radius:22px}.cm-hamburger{display:flex}.cm-links{display:none}.cm-links-open{display:flex}.cm-links button:not(.cm-back),.cm-back{font-size:.58rem!important;padding:.65rem .55rem!important}.cm-brand-btn{width:100%;margin-bottom:.35rem}.cm-committee-nav{grid-template-columns:repeat(2,1fr)}}
 
-@media(max-width:880px){.cm-links a:not(.cm-keep){display:none}.cm-stats,.cm-card-grid,.cm-perks,.cm-schedule,.cm-reg-layout,.cm-live-grid,.cm-steps,.cm-awards-grid,.cm-special-awards{grid-template-columns:1fr}.cm-nav{padding:.85rem 1rem}.cm-brand{letter-spacing:.18em}.cm-title{font-size:clamp(4.1rem,21vw,7rem)}.cm-orb{width:82vw;height:82vw}.cm-particles{display:none!important;opacity:0}.cm-mouse-aura{display:none!important}.cm-kicker{letter-spacing:.22em}.cm-kicker::before,.cm-kicker::after{width:20px}}.cm-section{padding-left:1rem;padding-right:1rem}.cm-fee{flex-direction:column}.cm-particles{display:none}.cm-preview-frame{height:340px}.cm-action-row .cm-btn{width:100%}}@media(prefers-reduced-motion:reduce){.cm-particles{display:none}.cm-mouse-aura{display:none!important}.cm-hero::before{transition:none}}
-.cm-btn,.cm-preview-tab,.cm-preview-expand,.cm-card,.cm-live-card,.cm-award-card,.cm-step-card{position:relative;overflow:hidden}
+@media(max-width:880px){.cm-links a:not(.cm-keep){display:none}.cm-stats,.cm-card-grid,.cm-perks,.cm-schedule,.cm-reg-layout,.cm-live-grid,.cm-steps,.cm-awards-grid,.cm-special-awards{grid-template-columns:1fr}.cm-nav{padding:.85rem 1rem}.cm-brand{letter-spacing:.18em}.cm-title{font-size:clamp(4.1rem,21vw,7rem)}.cm-orb{width:82vw;height:82vw}.cm-particles{display:none!important;opacity:0}.cm-mouse-aura{display:none!important}.cm-kicker{letter-spacing:.22em}.cm-kicker::before,.cm-kicker::after{width:20px}}.cm-section{padding-left:1rem;padding-right:1rem}.cm-fee{flex-direction:column}.cm-particles{display:none}.cm-preview-frame{height:340px}.cm-action-row .cm-btn{width:100%}}.cm-btn,.cm-preview-tab,.cm-preview-expand,.cm-card,.cm-live-card,.cm-award-card,.cm-step-card{position:relative;overflow:hidden}
 .cm-btn,.cm-card,.cm-live-card,.cm-award-card,.cm-step-card,.cm-preview-shell{transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease,background .25s ease,color .25s ease}
 .cm-btn::after,.cm-card::after,.cm-live-card::after,.cm-preview-shell::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 0 36%,rgba(255,255,255,.13) 48%,transparent 62% 100%);transform:translateX(-125%);transition:transform .55s ease}
 .cm-btn:hover::after,.cm-card:hover::after,.cm-live-card:hover::after,.cm-preview-shell:hover::after{transform:translateX(125%)}
@@ -637,14 +636,6 @@ body.cm-cinematic-scroll .cm-section.cm-in-view .cm-inner{filter:saturate(1.18) 
   .cm-signal-track span:nth-child(n+5){display:none}
   .cm-signal-track span{justify-content:center;font-size:.52rem;letter-spacing:.1em;border:1px solid rgba(120,193,255,.12);border-radius:999px;padding:.45rem .45rem;background:rgba(255,255,255,.035)}
   .cm-section[data-section]::after{font-size:4rem;right:.65rem;top:.9rem;opacity:.55}
-}
-@media(prefers-reduced-motion:reduce){
-  .cm-command-deck{animation:none!important}
-  .cm-globe-shell{animation:cmGlobeSpin 28s linear infinite!important}
-  .cm-orbit-globe::before,.cm-orbit-globe::after,.cm-globe-ring{animation-duration:34s!important}
-  .cm-globe-dot{animation:none!important}
-  .cm-signal-track,.cm-radar-ring.ring-a,.cm-radar-ring.ring-b{animation:none!important}
-  .cm-command-deck,.cm-deck-core,.cm-deck-panel,.cm-deck-chip{will-change:auto}
 }
 
 /* optimized cinematic engine: richer than static CSS, capped for low-end devices */
@@ -1323,10 +1314,6 @@ body.cm-cinematic-scroll .cm-card,body.cm-cinematic-scroll .cm-timeline-card,bod
   .cm-orbit-globe{display:block!important;opacity:.38!important;transform:scale(.72)!important;}
   .cm-nav,.cm-stat,.cm-card,.cm-timeline-card,.cm-reg-panel,.cm-live-card,.cm-preview-shell,.cm-award-card,.cm-step-card,.cm-committee-nav,.cm-scroll-rail{backdrop-filter:blur(7px)!important;-webkit-backdrop-filter:blur(7px)!important;}
 }
-@media(prefers-reduced-motion:reduce){
-  .cm-command-deck,.cm-command-deck::before,.cm-deck-ring,.cm-deck-core::before,.cm-section[data-scene] .cm-section-head::before,.cm-section[data-scene] .cm-section-head .cm-label::after{animation:none!important;}
-  .cm-cinematic-canvas{display:none!important;}
-}
 
 /* HARD EFFECT RESTORE: keep the cinematic Current MUN graphics alive */
 .cm-cinematic-canvas{display:block!important;opacity:.46!important;visibility:visible!important}
@@ -1673,13 +1660,10 @@ function CinematicCanvas() {
     let mouseX = 0.5;
     let mouseY = 0.5;
     let running = true;
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const makeNodes = () => {
       const area = Math.max(1, width * height);
-      const count = prefersReduced
-        ? Math.min(10, Math.max(6, Math.floor(area / 160000)))
-        : Math.min(width < 640 ? 8 : 14, Math.max(8, Math.floor(area / 150000)));
+      const count = Math.min(width < 640 ? 8 : 14, Math.max(8, Math.floor(area / 150000)));
       nodes = Array.from({ length: count }, (_, index) => ({
         x: Math.random(),
         y: Math.random(),
@@ -1706,7 +1690,7 @@ function CinematicCanvas() {
     const draw = (time) => {
       if (!running) return;
       const scrollLite = document.body.classList.contains("cm-cinematic-scroll");
-      const frameGap = prefersReduced ? 240 : scrollLite ? 260 : width < 720 ? 180 : 148;
+      const frameGap = scrollLite ? 260 : width < 720 ? 180 : 148;
       if (time - lastFrame < frameGap) {
         raf = requestAnimationFrame(draw);
         return;
@@ -2171,14 +2155,13 @@ export default function CurrentMunPage({ onBack }) {
   // Real cursor-tracking eyes: pupils smoothly follow the pointer anywhere on
   // screen (not just at the extremes), clamped inside the eye shape, using
   // requestAnimationFrame + lerp for silky, non-jumpy motion. Falls back to the
-  // original idle sweep animation on touch devices or prefers-reduced-motion.
+  // original idle sweep animation on touch devices.
   useEffect(() => {
     const page = pageRef.current;
     if (!page) return undefined;
 
     const finePointer = window.matchMedia("(pointer: fine)").matches;
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!finePointer || reducedMotion) return undefined;
+    if (!finePointer) return undefined;
 
     page.classList.add("cm-eye-live");
 
